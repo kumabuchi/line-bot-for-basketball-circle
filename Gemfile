@@ -1,0 +1,11 @@
+source "https://rubygems.org"
+
+gem "activerecord"
+gem "google-api-client"
+gem "json"
+gem "mysql2"
+gem "rest-client"
+gem "settingslogic"
+gem "sinatra"
+gem "sinatra-contrib"
+gem "unicorn"

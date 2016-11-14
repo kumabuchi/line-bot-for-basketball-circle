@@ -1,0 +1,7 @@
+vendor
+.bundle
+
+script
+log/*.log
+tmp/*.sock
+tmp/pids/*.pid
