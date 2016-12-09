@@ -5,3 +5,7 @@ script
 log/*.log
 tmp/*.sock
 tmp/pids/*.pid
+config/secret.json
+config/db/basketball.db
+static/qr/*.png
+static/slamdunk/*.png

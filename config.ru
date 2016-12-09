@@ -1,12 +1,19 @@
 Bundler.require(:default)
+require 'active_record'
 
-require("#{File.dirname(__FILE__)}/lib/model.rb")
-
-Dir["#{File.dirname(__FILE__)}/config/initializers/**/*.rb"].sort.each do |initializer|
+BASE_URL = 'https://mgm.basketball.balthazar.tokyo/'
+ROOT_DIR = File.expand_path("..", __FILE__);
+Dir["#{ROOT_DIR}/config/initializers/**/*.rb"].sort.each do |initializer|
   load(initializer)
 end
 
-require("#{File.dirname(__FILE__)}/lib/endpoint.rb")
-require("#{File.dirname(__FILE__)}/lib/controller.rb")
+ActiveRecord::Base.establish_connection(
+  "adapter"  => Settings.db.adapter,
+  "database" => "#{ROOT_DIR}/config/db/#{Settings.db.name}.db"
+)
+
+require("#{ROOT_DIR}/lib/model.rb")
+require("#{ROOT_DIR}/lib/endpoint.rb")
+require("#{ROOT_DIR}/lib/controller.rb")
 
 run Controller

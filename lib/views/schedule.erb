@@ -1,0 +1,42 @@
+
+<style>
+.mdl-button:hover {
+  background-color: transparent !important;
+}
+</style>
+
+<% @schedules.each do |s| %>
+<% participations = Participation.where(schedule_id: s.id) %>
+<section class="section--center mdl-grid mdl-grid--no-spacing mdl-shadow--2dp">
+  <div class="mdl-card mdl-cell mdl-cell--12-col">
+    <div id="schedule-panel" class="mdl-card__supporting-text mdl-grid mdl-grid--no-spacing">
+      <h4 class="mdl-cell mdl-cell--12-col"><%= s.date_ja %><br><%= s.description.strip %>
+      <button class="static-mark mdl-button mdl-js-button mdl-button--icon mdl-button--accent"><i class="material-icons">panorama_fish_eye</i></button><%= s.count_ok %>
+      <button class="static-mark mdl-button mdl-js-button mdl-button--icon"><i class="material-icons">change_history</i></button><%= s.count_un %>
+      </h4>
+      <% if participations.size > 0 %>
+      <% participations.each do |p| %>
+      <% user = User.find_by(id: p.user_id) %>
+      <% next unless user %>
+      <div class="section__text mdl-cell mdl-cell--10-col-desktop mdl-cell--5-col-tablet mdl-cell--3-col-phone">
+        <div class="thumbnail">
+          <img class="profile-image" src="<%= user.profile_image_url %>"/>
+          <span style="font-size: 140%;"><%= user.name %></span>
+        </div>
+      </div>
+      <div class="section__text mdl-cell mdl-cell--2-col-desktop mdl-cell--2-col-tablet mdl-cell--1-col-phone button-group">
+        <% if p.propriety == -1 %>
+        <button class="mdl-button mdl-js-button mdl-button--icon"><i class="material-icons">clear</i></button>
+        <% elsif p.propriety == 0 %>
+        <button class="mdl-button mdl-js-button mdl-button--icon"><i class="material-icons">change_history</i></button>
+        <% elsif p.propriety == 1 %>
+        <button class="mdl-button mdl-js-button mdl-button--icon mdl-button--accent"><i class="material-icons">panorama_fish_eye</i></button>
+        <% end %>
+      </div>
+      <% end %>
+      <% end %>
+      <div></div>
+    </div>
+  </div>
+</section>
+<% end %>

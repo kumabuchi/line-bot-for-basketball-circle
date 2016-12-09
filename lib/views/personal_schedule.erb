@@ -1,0 +1,37 @@
+<section class="section--center mdl-grid mdl-grid--no-spacing mdl-shadow--2dp">
+  <div class="mdl-card mdl-cell mdl-cell--12-col">
+    <div id="schedule-panel" class="mdl-card__supporting-text mdl-grid mdl-grid--no-spacing">
+      <h4 class="mdl-cell mdl-cell--12-col"><%= @user.name %>さんの参加表</h4>
+
+      <% @schedules.each do |s| %> 
+      <% p = Participation.find_by(user_id: @user.id, schedule_id: s.id) %>
+      <div class="personal-schedule-description section__text mdl-cell mdl-cell--10-col-desktop mdl-cell--5-col-tablet mdl-cell--2-col-phone">
+        <h5><%= s.date_ja %></h5>
+        <%= s.description %>
+      </div>
+      <div class="personal-schedule-button section__text mdl-cell mdl-cell--2-col-desktop mdl-cell--2-col-tablet mdl-cell--1-col-phone button-group">
+        <button class="mdl-button mdl-js-button mdl-button--icon <%= "mdl-button--accent mdl-button--backgroundcolor-accent" if p && p.propriety == 1 %>" name="<%= s.id %>" value="ok"><i class="material-icons">panorama_fish_eye</i></button>
+        <button class="mdl-button mdl-js-button mdl-button--icon <%= "mdl-button--accent mdl-button--backgroundcolor-accent" if p && p.propriety == 0 %>" name="<%= s.id %>" value="un"><i class="material-icons">change_history</i></button>
+        <button class="mdl-button mdl-js-button mdl-button--icon <%= "mdl-button--accent mdl-button--backgroundcolor-accent" if p && p.propriety ==-1 %>" name="<%= s.id %>" value="ko"><i class="material-icons">clear</i></button>
+      </div>
+      <% end %>
+
+      <!-- comment -->
+      <!--
+      <div class="section__text mdl-cell mdl-cell--12-col-desktop mdl-cell--8-col-tablet mdl-cell--5-col-phone">
+        <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+          <input class="mdl-textfield__input" type="text" id="comment">
+          <label class="mdl-textfield__label" for="comment">Enter a commnet</label>
+        </div>
+      </div>
+      -->
+      <div class="section__text mdl-cell ok-button">
+        <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent mdl-cell--3-col-desktop mdl-cell--8-col-tablet mdl-cell--5-col-phone">OK</button>
+      </div>
+
+      <form id="submit-form" method="POST" action="./">
+        <button type="submit" id="submit-button"></button>
+      </form>
+    </div>
+  </div>
+</section>
