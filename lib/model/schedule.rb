@@ -42,4 +42,8 @@ class Schedule < ActiveRecord::Base
   def count_un
     Participation.where(schedule_id: self.id).where(propriety: 0).count
   end
+
+  def count_ko
+    Participation.where(schedule_id: self.id).where(propriety: -1).count
+  end
 end

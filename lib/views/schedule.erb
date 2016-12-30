@@ -10,9 +10,10 @@
 <section class="section--center mdl-grid mdl-grid--no-spacing mdl-shadow--2dp">
   <div class="mdl-card mdl-cell mdl-cell--12-col">
     <div id="schedule-panel" class="mdl-card__supporting-text mdl-grid mdl-grid--no-spacing">
-      <h4 class="mdl-cell mdl-cell--12-col"><%= s.date_ja %><br><%= s.description.strip %>
+      <h4 class="mdl-cell mdl-cell--12-col"><b><%= s.date_ja %></b><br><%= s.description.strip %>
       <button class="static-mark mdl-button mdl-js-button mdl-button--icon mdl-button--accent"><i class="material-icons">panorama_fish_eye</i></button><%= s.count_ok %>
       <button class="static-mark mdl-button mdl-js-button mdl-button--icon"><i class="material-icons">change_history</i></button><%= s.count_un %>
+      <button class="static-mark mdl-button mdl-js-button mdl-button--icon"><i class="material-icons">clear</i></button><%= s.count_ko %>
       </h4>
       <% if participations.size > 0 %>
       <% participations.each do |p| %>

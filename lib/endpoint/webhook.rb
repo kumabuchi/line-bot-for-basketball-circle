@@ -11,6 +11,11 @@ class Webhook
     LineApi.reply(param[:replyToken], send_msg_obj)
   end
 
+  def sticker_response(param, sticker_id, package_id)
+    send_msg_obj = Message.create_sticker_obj(sticker_id, package_id)
+    LineApi.reply(param[:replyToken], send_msg_obj)
+  end
+
   def qr(param)
     msg = param[:message][:text]
     text = msg[3...msg.length].strip
@@ -19,6 +24,41 @@ class Webhook
     LineApi.reply(param[:replyToken], send_msg_obj)
   rescue => e
     send_msg_obj = Message.create_text_obj("QRコードに変換出来ませんでした。文字列が長すぎる可能性があります。")
+    LineApi.reply(param[:replyToken], send_msg_obj)
+  end
+
+  def team(param)
+    members = param[:message][:text].split
+    members.shift
+    if members.length < 1
+      send_msg_obj = Message.create_text_obj("Usage: チーム分け [Usernames ..]\nex. チーム分け ユーザ1 ユーザ2 ユーザ3")
+      LineApi.reply(param[:replyToken], send_msg_obj)
+      return 
+    end
+    team_num = members.first.to_i == 0 ? 2 : members.shift.to_i
+    teams = Member.team(team_num, members)
+    response_message = ['以下のチーム分けでどうでしょう？']
+    teams.each do |name, members|
+      response_message.push("【#{name}】")
+      response_message.push("#{members.sort.join(',')}")
+    end
+    send_msg_obj = Message.create_text_obj(response_message.join("\n"))
+    LineApi.reply(param[:replyToken], send_msg_obj)
+  end
+
+  def member(param)
+    members = param[:message][:text].split
+    members.shift
+    if members.length < 1
+      send_msg_obj = Message.create_text_obj("Usage: 抽選 [Usernames ..]\nex. 抽選 ユーザ1 ユーザ2 ユーザ3")
+      LineApi.reply(param[:replyToken], send_msg_obj)
+      return 
+    end
+    select_num = members.first.to_i == 0 ? 1 : members.shift.to_i
+    select_num = 1 if select_num < 1
+    selected_members = Member.random(select_num, members)
+    response_message = "抽選結果はこちら！\n#{selected_members.sort.join(',')}"
+    send_msg_obj = Message.create_text_obj(response_message)
     LineApi.reply(param[:replyToken], send_msg_obj)
   end
 
@@ -131,6 +171,22 @@ class Webhook
     LineApi.reply(param[:replyToken], send_msg_obj)
   end
 
+  def update(param)
+    unless param[:source][:userId]
+      send_msg_obj = Message.create_text_obj("プロフィール情報の更新は私との個人ラインでのみ有効です。")
+      LineApi.reply(param[:replyToken], send_msg_obj)
+      return
+    end
+    profile = LineApi.profile(param[:source][:userId]);
+    user = User.find_by(line_user_id: profile[:userId])
+    raise 'DBがfollow状況と不整合です' unless user
+    user.name = profile[:displayName]
+    user.profile_image_url = profile[:pictureUrl]
+    user.save!
+    send_msg_obj = Message.create_text_obj("プロフィール情報を更新しました！")
+    LineApi.reply(param[:replyToken], send_msg_obj)
+  end
+
   def follow(param)
     profile = LineApi.profile(param[:source][:userId]);
     user = User.find_or_create_by(line_user_id: profile[:userId])
@@ -152,14 +208,16 @@ class Webhook
 
   def help(param)
     response_message = [
-      "発言内容 : 説明",
+      "反応する発言 : 説明",
       "------------------",
       "*画像* : スラムダンクの名場面っぽい画像を送ります。",
       "*名言* : スラムダンクの名言っぽいセリフをつぶやきます。",
       "参加表 : 参加表のURLを返します。",
-      "qr:* : 任意の文字列(*)のQRコードを生成します。",
       "(四則演算の数式) : 計算結果を返します。",
-      "超初級|初級|初中級|中級 : 東京と千葉の試合リストを表示します。"
+      "超初級|初級|初中級|中級 : 東京と千葉の試合リストを表示します。",
+      "チーム分け : 続けてユーザ名を空白区切りで入力すると、ランダムにチーム分けします。",
+      "抽選 : 続けてユーザ名を空白区切りで入力すると、ランダムにユーザを抽選します。",
+      "qr:* : 任意の文字列(*)のQRコードを生成します。"
     ].join("\n")
     send_msg_obj = Message.create_text_obj(response_message)
     LineApi.reply(param[:replyToken], send_msg_obj)

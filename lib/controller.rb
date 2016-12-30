@@ -77,8 +77,22 @@ class Controller < Sinatra::Base
           Webhook.new.cheer(param)
         elsif msg.include?('名言')
           Webhook.new.say(param)
-        elsif msg.downcase.start_with?("qr:")
+        elsif msg.include?('ドタ参')
+          Webhook.new.sticker_response(param, '114', '1')
+        elsif msg.include?('全面')
+          Webhook.new.sticker_response(param, '19', '2')
+        elsif msg.include?('遅刻') || msg.include?('遅れ')
+          Webhook.new.sticker_response(param, '520', '2')
+        elsif msg.include?('キャンセルします') || msg.include?('キャンセルしまーす')
+          Webhook.new.sticker_response(param, '16', '1')
+        elsif msg.include?('出勤') || msg.include?('仕事')
+          Webhook.new.sticker_response(param, '161', '2')
+        elsif msg.downcase.start_with?('qr:')
           Webhook.new.qr(param)
+        elsif msg.downcase.start_with?('チーム分け') || msg.downcase.start_with?('チームわけ')
+          Webhook.new.team(param)
+        elsif msg.downcase.start_with?('抽選')
+          Webhook.new.member(param)
         elsif /超初級|初級|初中級|中級/ =~ msg
           Webhook.new.competition(param, msg)
         elsif msg == '参加可否'
@@ -87,6 +101,8 @@ class Controller < Sinatra::Base
           Webhook.new.schedule(param)
         elsif msg == 'URL変更'
           Webhook.new.generate_random_hash(param)
+        elsif msg == '更新'
+          Webhook.new.update(param)
         elsif msg == '通知設定'
           Webhook.new.setting(param)
         elsif msg == 'リマインドオン'

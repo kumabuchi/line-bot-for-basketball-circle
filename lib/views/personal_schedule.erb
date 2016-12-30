@@ -6,7 +6,7 @@
       <% @schedules.each do |s| %> 
       <% p = Participation.find_by(user_id: @user.id, schedule_id: s.id) %>
       <div class="personal-schedule-description section__text mdl-cell mdl-cell--10-col-desktop mdl-cell--5-col-tablet mdl-cell--2-col-phone">
-        <h5><%= s.date_ja %></h5>
+        <h5><b><%= s.date_ja %></b></h5>
         <%= s.description %>
       </div>
       <div class="personal-schedule-button section__text mdl-cell mdl-cell--2-col-desktop mdl-cell--2-col-tablet mdl-cell--1-col-phone button-group">
