@@ -73,6 +73,7 @@ class Controller < Sinatra::Base
       end
       if param[:type] == 'message'
         msg = param[:message][:text]
+        next if msg.nil?
         if msg.include?('画像')
           Webhook.new.cheer(param)
         elsif msg.include?('名言')
@@ -115,6 +116,8 @@ class Controller < Sinatra::Base
           Webhook.new.set_request(param, false)
         elsif msg == 'ヘルプ'
           Webhook.new.help(param)
+        elsif msg == 'プレイ動画'
+          Webhook.new.movie(param)
         elsif msg.match(/^([0-9\+\-\*\/\(\)\%\^\.\:]+)$/)
           Webhook.new.calc(param)
         end 

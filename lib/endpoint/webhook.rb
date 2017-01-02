@@ -171,6 +171,11 @@ class Webhook
     LineApi.reply(param[:replyToken], send_msg_obj)
   end
 
+  def movie(param)
+    send_msg_obj = Message.create_text_obj("プレイ動画は以下のURLからどうぞ！\nhttps://www.dropbox.com/sh/ueb7pq48a4v0u9o/AADqB9mhYdgc_jzk8nwX_WWla?dl=0")
+    LineApi.reply(param[:replyToken], send_msg_obj)
+  end
+
   def update(param)
     unless param[:source][:userId]
       send_msg_obj = Message.create_text_obj("プロフィール情報の更新は私との個人ラインでのみ有効です。")
@@ -213,6 +218,7 @@ class Webhook
       "*画像* : スラムダンクの名場面っぽい画像を送ります。",
       "*名言* : スラムダンクの名言っぽいセリフをつぶやきます。",
       "参加表 : 参加表のURLを返します。",
+      "プレイ動画 : プレイ動画の参照用URLを返します。",
       "(四則演算の数式) : 計算結果を返します。",
       "超初級|初級|初中級|中級 : 東京と千葉の試合リストを表示します。",
       "チーム分け : 続けてユーザ名を空白区切りで入力すると、ランダムにチーム分けします。",

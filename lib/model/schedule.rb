@@ -4,7 +4,7 @@ class Schedule < ActiveRecord::Base
   scope :in_week, -> { where(start: Time.now.tomorrow.beginning_of_day..(Time.now + 1.week).end_of_day) }
   scope :not_cancelled, -> { where is_cancelled: false }
   scope :not_personal_practice, -> { where.not('description like ?', '%信開%') }
-  scope :order_by_start, -> { order("start DESC") }
+  scope :order_by_start, -> { order("start") }
 
   def date_ja(require_new_line = false)
     start_local = self.start.in_time_zone("Asia/Tokyo")

@@ -1,6 +1,6 @@
 class UserSchedule
   def schedule
-    Schedule.in_future.not_cancelled.not_personal_practice
+    Schedule.in_future.not_cancelled.not_personal_practice.order_by_start
   end
 
   def sync
@@ -81,7 +81,7 @@ class UserSchedule
   def personal_schedule(random_hash)
     @user = User.find_by(random: random_hash)
     raise 'ユーザが見つかりませんでした。' unless @user
-    @schedules = Schedule.in_future.not_cancelled.not_personal_practice
+    @schedules = Schedule.in_future.not_cancelled.not_personal_practice.order_by_start
     [@user, @schedules]
   end
 
