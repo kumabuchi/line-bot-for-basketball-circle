@@ -18,6 +18,8 @@ class Controller < Sinatra::Base
     status 500
     @message = e.message
     @logger.error("#{e.message}")
+    send_msg_obj = Message.create_text_obj("ERROR: #{e.message}")
+    LineApi.push(ENV['ADMIN_USER'], send_msg_obj)
     erb :error_500, layout: false
   end
 
