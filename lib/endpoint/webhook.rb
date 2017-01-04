@@ -172,13 +172,13 @@ class Webhook
   end
 
   def movie(param)
-    send_msg_obj = Message.create_text_obj("プレイ動画は以下のURLからどうぞ！\nhttps://www.dropbox.com/sh/ueb7pq48a4v0u9o/AADqB9mhYdgc_jzk8nwX_WWla?dl=0")
+    send_msg_obj = Message.create_text_obj("練習や試合の動画は以下のURLからどうぞ！\nhttps://www.dropbox.com/sh/ueb7pq48a4v0u9o/AADqB9mhYdgc_jzk8nwX_WWla?dl=0")
     LineApi.reply(param[:replyToken], send_msg_obj)
   end
 
   def update(param)
     unless param[:source][:userId]
-      send_msg_obj = Message.create_text_obj("プロフィール情報の更新は私との個人ラインでのみ有効です。")
+      send_msg_obj = Message.create_text_obj("ユーザ情報の更新は私との個人ラインでのみ有効です。")
       LineApi.reply(param[:replyToken], send_msg_obj)
       return
     end
@@ -188,7 +188,7 @@ class Webhook
     user.name = profile[:displayName]
     user.profile_image_url = profile[:pictureUrl]
     user.save!
-    send_msg_obj = Message.create_text_obj("プロフィール情報を更新しました！")
+    send_msg_obj = Message.create_text_obj("ユーザ情報を更新しました！")
     LineApi.reply(param[:replyToken], send_msg_obj)
   end
 
@@ -213,17 +213,20 @@ class Webhook
 
   def help(param)
     response_message = [
-      "反応する発言 : 説明",
+      "【反応する発言】説明",
       "------------------",
-      "*画像* : スラムダンクの名場面っぽい画像を送ります。",
-      "*名言* : スラムダンクの名言っぽいセリフをつぶやきます。",
-      "参加表 : 参加表のURLを返します。",
-      "プレイ動画 : プレイ動画の参照用URLを返します。",
-      "(四則演算の数式) : 計算結果を返します。",
-      "超初級|初級|初中級|中級 : 東京と千葉の試合リストを表示します。",
-      "チーム分け : 続けてユーザ名を空白区切りで入力すると、ランダムにチーム分けします。",
-      "抽選 : 続けてユーザ名を空白区切りで入力すると、ランダムにユーザを抽選します。",
-      "qr:* : 任意の文字列(*)のQRコードを生成します。"
+      "【*画像*】スラムダンクの名場面っぽい画像を送ります。",
+      "【*名言*】スラムダンクの名言っぽいセリフをつぶやきます。",
+      "【参加表】参加表のURLを返します。",
+      "【動画URL】練習や試合動画の参照用URLを返します。",
+      "【(四則演算の数式)】計算結果を返します。",
+      "【超初級|初級|初中級|中級】東京と千葉の試合リストを表示します。",
+      "【チーム分け】続けてユーザ名を空白区切りで入力すると、ランダムにチーム分けします。",
+      "【抽選】続けてユーザ名を空白区切りで入力すると、ランダムにユーザを抽選します。",
+      "【qr:*】任意の文字列(*)を表すQRコードを生成します。",
+      "【参加可否】参加表の登録用URLを取得します。(個人LINEでのみ有効)",
+      "【URL変更】参加表の登録用URLを変更します。(個人LINEでのみ有効)",
+      "【ユーザ情報更新】LINEのユーザ名や画像の変更を、参加表の表示に反映します。(個人LINEでのみ有効)"
     ].join("\n")
     send_msg_obj = Message.create_text_obj(response_message)
     LineApi.reply(param[:replyToken], send_msg_obj)

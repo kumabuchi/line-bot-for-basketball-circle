@@ -104,7 +104,7 @@ class Controller < Sinatra::Base
           Webhook.new.schedule(param)
         elsif msg == 'URL変更'
           Webhook.new.generate_random_hash(param)
-        elsif msg == '更新'
+        elsif msg == 'ユーザ情報更新'
           Webhook.new.update(param)
         elsif msg == '通知設定'
           Webhook.new.setting(param)
@@ -118,7 +118,7 @@ class Controller < Sinatra::Base
           Webhook.new.set_request(param, false)
         elsif msg == 'ヘルプ'
           Webhook.new.help(param)
-        elsif msg == 'プレイ動画'
+        elsif msg == '動画URL'
           Webhook.new.movie(param)
         elsif msg.match(/^([0-9\+\-\*\/\(\)\%\^\.\:]+)$/)
           Webhook.new.calc(param)

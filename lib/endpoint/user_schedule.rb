@@ -67,7 +67,7 @@ class UserSchedule
         if participation.nil? || participation.propriety == 0
           message = [
             '【リクエスト】',
-            "1週間以内に開催予定のイベントについて、参加可否が未登録になっています。以下のURLからアクセスして〇or×の登録をお願いします。",
+            "1週間以内に開催予定のイベントについて、参加可否が未登録もしくは△になっています。以下のURLからアクセスして〇or×の登録をお願いします。",
             "#{BASE_URL}schedule/#{user.random}"
           ].join("\n")
           send_msg_obj = Message.create_text_obj(message)
