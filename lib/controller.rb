@@ -76,32 +76,11 @@ class Controller < Sinatra::Base
       if param[:type] == 'message'
         msg = param[:message][:text]
         next if msg.nil?
-        if msg.include?('画像')
-          Webhook.new.cheer(param)
-        elsif msg.include?('名言')
-          Webhook.new.say(param)
-        elsif msg.include?('ドタ参')
-          Webhook.new.sticker_response(param, '114', '1')
-        elsif msg.include?('全面')
-          Webhook.new.sticker_response(param, '19', '2')
-        elsif msg.include?('遅刻') || msg.include?('遅れ')
-          Webhook.new.sticker_response(param, '520', '2')
-        elsif msg.include?('キャンセルします') || msg.include?('キャンセルしまーす')
-          Webhook.new.sticker_response(param, '16', '1')
-        elsif msg.include?('出勤') || msg.include?('仕事')
-          Webhook.new.sticker_response(param, '161', '2')
-        elsif msg.downcase.start_with?('qr:')
-          Webhook.new.qr(param)
-        elsif msg.downcase.start_with?('チーム分け') || msg.downcase.start_with?('チームわけ')
-          Webhook.new.team(param)
-        elsif msg.downcase.start_with?('抽選')
-          Webhook.new.member(param)
-        elsif /超初級|初級|初中級|中級/ =~ msg
-          Webhook.new.competition(param, msg)
+
+        if msg == '参加表'
+          Webhook.new.schedule(param)
         elsif msg == '参加可否'
           Webhook.new.participation(param)
-        elsif msg == '参加表'
-          Webhook.new.schedule(param)
         elsif msg == 'URL変更'
           Webhook.new.generate_random_hash(param)
         elsif msg == 'ユーザ情報更新'
@@ -120,9 +99,33 @@ class Controller < Sinatra::Base
           Webhook.new.help(param)
         elsif msg == '動画URL'
           Webhook.new.movie(param)
+        elsif /^予約申込の完了/ =~ msg
+          Webhook.new.add_reservation(param)
         elsif msg.match(/^([0-9\+\-\*\/\(\)\%\^\.\:]+)$/)
           Webhook.new.calc(param)
-        end 
+        elsif /^超初級$|^初級$|^初中級$|^中級$/ =~ msg
+          Webhook.new.competition(param, msg)
+        elsif msg.downcase.start_with?('qr:')
+          Webhook.new.qr(param)
+        elsif msg.downcase.start_with?('抽選')
+          Webhook.new.member(param)
+        elsif msg.downcase.start_with?('チーム分け') || msg.downcase.start_with?('チームわけ')
+          Webhook.new.team(param)
+        elsif msg.include?('画像')
+          Webhook.new.cheer(param)
+        elsif msg.include?('名言')
+          Webhook.new.say(param)
+        elsif msg.include?('全面')
+          Webhook.new.sticker_response(param, '19', '2')
+        elsif msg.include?('ドタ参')
+          Webhook.new.sticker_response(param, '114', '1')
+        elsif msg.include?('遅刻') || msg.include?('遅れ')
+          Webhook.new.sticker_response(param, '520', '2')
+        elsif msg.include?('出勤') || msg.include?('仕事')
+          Webhook.new.sticker_response(param, '161', '2')
+        elsif msg.include?('キャンセルします') || msg.include?('キャンセルしまーす')
+          Webhook.new.sticker_response(param, '16', '1')
+        end
       end
     end 
     @status = 'OK'
