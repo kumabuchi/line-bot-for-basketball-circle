@@ -284,3 +284,9 @@ html, body {
 .mdl-button--backgroundcolor-accent {
   background-color: rgba(158,158,158,.2) !important;
 }
+.mdl-mega-footer--bottom-section {
+  text-align: center !important;
+}
+.mdl-logo {
+  float: none !important;
+}
