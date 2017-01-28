@@ -11,6 +11,11 @@ class Webhook
     LineApi.reply(param[:replyToken], send_msg_obj)
   end
 
+  def game(param)
+    games = Games.create_games_message_obj
+    LineApi.reply(param[:replyToken], games)
+  end
+
   def sticker_response(param, sticker_id, package_id)
     send_msg_obj = Message.create_sticker_obj(sticker_id, package_id)
     LineApi.reply(param[:replyToken], send_msg_obj)
@@ -226,18 +231,19 @@ class Webhook
     response_message = [
       "【反応する発言】説明",
       "------------------",
-      "【*画像*】スラムダンクの名場面っぽい画像を送ります。",
-      "【*名言*】スラムダンクの名言っぽいセリフをつぶやきます。",
-      "【参加表】参加表のURLを返します。",
-      "【動画URL】練習や試合動画の参照用URLを返します。",
-      "【(四則演算の数式)】計算結果を返します。",
-      "【超初級|初級|初中級|中級】東京と千葉の試合リストを表示します。",
-      "【チーム分け】続けてユーザ名を空白区切りで入力すると、ランダムにチーム分けします。",
-      "【抽選】続けてユーザ名を空白区切りで入力すると、ランダムにユーザを抽選します。",
-      "【qr:*】任意の文字列(*)を表すQRコードを生成します。",
-      "【参加可否】参加表の登録用URLを取得します。(個人LINEでのみ有効)",
-      "【URL変更】参加表の登録用URLを変更します。(個人LINEでのみ有効)",
-      "【ユーザ情報更新】LINEのユーザ名や画像の変更を、参加表の表示に反映します。(個人LINEでのみ有効)"
+      "【*画像*】\nスラムダンクの名場面っぽい画像を送ります。",
+      "【*名言*】\nスラムダンクの名言っぽいセリフをつぶやきます。",
+      "【参加表】\n参加表のURLを返します。",
+      "【動画URL】\n練習や試合動画の参照用URLを返します。",
+      "【(四則演算の数式)】\n計算結果を返します。",
+      "【超初級|初級|初中級|中級】\n東京と千葉の試合リストを表示します。",
+      "【チーム分け】\n続けてユーザ名を空白区切りで入力すると、ランダムにチーム分けします。",
+      "【抽選】\n続けてユーザ名を空白区切りで入力すると、ランダムにユーザを抽選します。",
+      "【qr:*】\n任意の文字列(*)を表すQRコードを生成します。",
+      "【ゲーム】\nスマホで遊べるゲームの一覧を返します。",
+      "【参加可否】\n参加表の登録用URLを取得します。(個人LINEでのみ有効)",
+      "【URL変更】\n参加表の登録用URLを変更します。(個人LINEでのみ有効)",
+      "【ユーザ情報更新】\nLINEのユーザ名や画像の変更を、参加表の表示に反映します。(個人LINEでのみ有効)"
     ].join("\n")
     send_msg_obj = Message.create_text_obj(response_message)
     LineApi.reply(param[:replyToken], send_msg_obj)

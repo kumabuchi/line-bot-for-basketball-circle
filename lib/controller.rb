@@ -99,6 +99,8 @@ class Controller < Sinatra::Base
           Webhook.new.help(param)
         elsif msg == '動画URL'
           Webhook.new.movie(param)
+        elsif msg == 'ゲーム'
+          Webhook.new.game(param)
         elsif /^予約申込の完了/ =~ msg
           Webhook.new.add_reservation(param)
         elsif msg.match(/^([0-9\+\-\*\/\(\)\%\^\.\:]+)$/)
