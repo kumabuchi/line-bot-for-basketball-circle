@@ -10,6 +10,11 @@ class UserSchedule
     events.each do |event|
       start_date = event.start.date || event.start.date_time
       end_date = event.end.date || event.end.date_time
+
+      # 同じ時間の予約でも開始秒が異なる場合があるため、秒を切り捨てる
+      start_date = start_date - Rational(start_date.sec, 24 * 60 * 60)
+      end_date = end_date - Rational(end_date.sec, 24 * 60 * 60)
+
       schedule = Schedule.find_or_initialize_by(start: start_date, end: end_date)
       new_schedules.push(schedule) if schedule.new_record?
       schedule.description = event.summary
@@ -27,13 +32,14 @@ class UserSchedule
       LineApi.push(ENV['GROUP_ID'], send_msg_obj)
     end
 
-    User.all.each do |user|
-      profile = LineApi.profile(user.line_user_id);
-      next if profile.nil?
-      user.name = profile[:displayName]
-      user.profile_image_url = profile[:pictureUrl]
-      user.save!
-    end
+    ## bug: 削除済みアカウントのprofileは404
+    #User.all.each do |user|
+    #  profile = LineApi.profile(user.line_user_id);
+    #  next if profile.nil?
+    #  user.name = profile[:displayName]
+    #  user.profile_image_url = profile[:pictureUrl]
+    #  user.save!
+    #end
   end
 
   def remind
