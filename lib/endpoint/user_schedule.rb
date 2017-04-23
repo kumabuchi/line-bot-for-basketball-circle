@@ -32,14 +32,14 @@ class UserSchedule
       LineApi.push(ENV['GROUP_ID'], send_msg_obj)
     end
 
-    ## bug: 削除済みアカウントのprofileは404
-    #User.all.each do |user|
-    #  profile = LineApi.profile(user.line_user_id);
-    #  next if profile.nil?
-    #  user.name = profile[:displayName]
-    #  user.profile_image_url = profile[:pictureUrl]
-    #  user.save!
-    #end
+    # bug: 削除済みアカウントのprofileは404
+    User.all.each do |user|
+      profile = LineApi.profile(user.line_user_id);
+      next if profile.nil?
+      user.name = profile[:displayName]
+      user.profile_image_url = profile[:pictureUrl]
+      user.save!
+    end
   end
 
   def remind
