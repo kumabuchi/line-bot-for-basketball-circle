@@ -4,8 +4,6 @@ class Controller < Sinatra::Base
 
   before do
     @logger = Logger.new('log/sinatra.log')
-    http_headers = request.env.select { |k, v| k.start_with?('HTTP_') }
-    @logger.info(http_headers)
   end
 
   not_found do
@@ -18,8 +16,12 @@ class Controller < Sinatra::Base
     status 500
     @message = e.message
     @logger.error("#{e.message}")
-    send_msg_obj = Message.create_text_obj("ERROR: #{e.message}")
-    LineApi.push(ENV['ADMIN_USER'], send_msg_obj)
+    send_msg_obj = Message.create_text_obj(
+      "システムエラーが発生したようです。。。\nERROR: #{e.message}"
+    )
+    ENV['ADMIN_USERS'].split(",").each do |admin_user|
+      LineApi.push(admin_user, send_msg_obj)
+    end
     erb :error_500, layout: false
   end
 
