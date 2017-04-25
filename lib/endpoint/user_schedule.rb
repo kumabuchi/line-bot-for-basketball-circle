@@ -3,6 +3,27 @@ class UserSchedule
     Schedule.in_future.not_cancelled.not_personal_practice.order_by_start
   end
 
+  def summary
+    schedules = Schedule.in_future.not_cancelled.not_personal_practice.order_by_start
+    response_message = ["直近5日以内の予約で参加人数が6人未満の日があります。キャンセル忘れに注意してください。"]
+    require_notice = false
+    schedules.each do |schedule|
+      break if schedule.start > (Time.now + 5.day).end_of_day
+      if schedule.count_ok < 6
+        response_message.push('-------------------')
+        response_message.push("#{schedule.date_ja(true)}")
+        response_message.push("#{schedule.description}")
+        response_message.push("〇#{schedule.count_ok} △#{schedule.count_un} ×#{schedule.count_ko}")
+        require_notice = true
+      end
+    end
+    return unless require_notice
+    send_msg_obj = Message.create_text_obj(response_message.join("\n"))
+    ENV['ADMIN_USERS'].split(",").each do |admin_user|
+      LineApi.push(admin_user, send_msg_obj)
+    end
+  end
+
   def sync
     events = GoogleCalendar.new.list
     Schedule.update_all("is_cancelled = 1")
@@ -24,8 +45,8 @@ class UserSchedule
     new_schedules.each do |schedule|
       response_message = [
         '【予約追加】',
-        schedule.description,
         schedule.date_ja(true),
+        schedule.description,
         'http://qq4q.biz/yIFs'
       ].join("\n")
       send_msg_obj = Message.create_text_obj(response_message)
@@ -47,8 +68,8 @@ class UserSchedule
     tomorrow_schedules.each do |schedule|
       response_message = [
         '【リマインダー】',
-        schedule.description,
         schedule.date_ja(true),
+        schedule.description,
         'http://qq4q.biz/yIFs'
       ].join("\n")
       send_msg_obj = Message.create_text_obj(response_message)
@@ -62,8 +83,8 @@ class UserSchedule
           '【リマインダー】',
           "#{user.name}さんは明日参加予定です。",
           "---------------",
-          schedule.description,
           schedule.date_ja(true),
+          schedule.description,
           'http://qq4q.biz/yIFs'
         ].join("\n")
         send_msg_obj = Message.create_text_obj(response_message)
@@ -81,7 +102,7 @@ class UserSchedule
         if participation.nil? || participation.propriety == 0
           message = [
             '【リクエスト】',
-            "1週間以内に開催予定のイベントについて、参加可否が未登録もしくは△になっています。以下のURLからアクセスして〇or×の登録をお願いします。",
+            "1週間以内に開催予定のイベントの参加可否が未登録もしくは△になっています。以下のURLからアクセスして〇or×の登録をお願いします。",
             "#{BASE_URL}schedule/#{user.random}"
           ].join("\n")
           send_msg_obj = Message.create_text_obj(message)

@@ -46,6 +46,13 @@ class Controller < Sinatra::Base
     erb :rest, layout: false
   end
 
+  get '/schedule/summary' do
+    UserSchedule.new.summary
+    @status = 'OK'
+    @message = ''
+    erb :rest, layout: false
+  end
+
   get '/schedule' do
     @schedules = UserSchedule.new.schedule
     erb :schedule
@@ -103,6 +110,8 @@ class Controller < Sinatra::Base
           Webhook.new.movie(param)
         elsif msg == 'ゲーム'
           Webhook.new.game(param)
+        elsif msg == 'サマリ' || msg == 'サマリー'
+          Webhook.new.summary(param)
         elsif /^予約申込の完了/ =~ msg
           Webhook.new.add_reservation(param)
         elsif msg.match(/^([0-9\+\-\*\/\(\)\%\^\.\:]+)$/)

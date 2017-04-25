@@ -208,6 +208,22 @@ class Webhook
     LineApi.reply(param[:replyToken], send_msg_obj)
   end
 
+  def summary(param)
+    schedules = Schedule.in_future.not_cancelled.not_personal_practice.order_by_start
+    response_message = ['参加表のサマリです～']
+    response_message.push('-------------------')
+    is_recent = true
+    require_notice = false
+    schedules.each do |schedule|
+      response_message.push("・#{schedule.date_ja(true).split("\n")[0]} #{schedule.description}") 
+      response_message.push("    〇#{schedule.count_ok} △#{schedule.count_un} ×#{schedule.count_ko}")
+      require_notice = true if schedule.start > (Time.now + 5.day).end_of_day && schedule.count_ok < 6
+    end
+    response_message.push("-------------------\n直近5日以内の予約で参加人数が6人未満の日があります。キャンセル忘れに注意してください。") if require_notice
+    send_msg_obj = Message.create_text_obj(response_message.join("\n"))
+    LineApi.reply(param[:replyToken], send_msg_obj)
+  end
+
   def follow(param)
     profile = LineApi.profile(param[:source][:userId]);
     user = User.find_or_create_by(line_user_id: profile[:userId])
@@ -234,6 +250,7 @@ class Webhook
       "【*画像*】\nスラムダンクの名場面っぽい画像を送ります。",
       "【*名言*】\nスラムダンクの名言っぽいセリフをつぶやきます。",
       "【参加表】\n参加表のURLを返します。",
+      "【サマリ】\n参加表のサマリを返します。",
       "【動画URL】\n練習や試合動画の参照用URLを返します。",
       "【(四則演算の数式)】\n計算結果を返します。",
       "【超初級|初級|初中級|中級】\n東京と千葉の試合リストを表示します。",
