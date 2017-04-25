@@ -34,7 +34,7 @@ class GoogleCalendar
     summary = nil
     start_datetime = nil
     end_datetime = nil
-    response = nil
+    responses = []
 
     msg.each_line do |line|
       line.strip!
@@ -52,9 +52,14 @@ class GoogleCalendar
         start_datetime = DateTime.strptime(datetimes[1]+' '+times[0],'%Y/%m/%d %R') - Rational(9, 24)
         end_datetime   = DateTime.strptime(datetimes[1]+' '+times[1],'%Y/%m/%d %R') - Rational(9, 24)
       end
+      if /^施設使用料/ =~ line
+        responses.push(create(summary, start_datetime, end_datetime)) unless summary.nil? || start_datetime.nil? || end_datetime.nil?
+        summary = nil
+        start_datetime = nil
+        end_datetime = nil
+      end
     end
-    response = create(summary, start_datetime, end_datetime) unless summary.nil? || start_datetime.nil? || end_datetime.nil?
-    response
+    responses
   end
 
   private

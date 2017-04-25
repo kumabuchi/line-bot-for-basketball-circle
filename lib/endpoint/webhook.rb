@@ -199,9 +199,14 @@ class Webhook
 
   def add_reservation(param)
     send_msg_obj = nil
-    response = GoogleCalendar.new.add_reservation(param[:message][:text])
-    unless response.nil?
-      send_msg_obj = Message.create_text_obj("予定をカレンダーに登録しました。\n#{response.html_link}")
+    responses = GoogleCalendar.new.add_reservation(param[:message][:text])
+    unless responses.empty?
+      response_message = ["予定をカレンダーに登録しました。"]
+      responses.each do |response|
+        response_message.push('-------------------')
+        response_message.push("#{response.html_link}")
+      end
+      send_msg_obj = Message.create_text_obj(response_message.join("\n"))
     else
       send_msg_obj = Message.create_text_obj("パース処理に失敗しました。フォーマットが正しい場合、管理者に問い合わせてください。")
     end
