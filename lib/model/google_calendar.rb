@@ -39,11 +39,11 @@ class GoogleCalendar
     msg.each_line do |line|
       line.strip!
       if line.include?('市民体育館')
-        summary = line[0]
+        summary = line[0, 2] + '・'
         if line.include?('全面') || (line.include?('塩浜') && line.include?('１／２面'))
-          summary << '全'
+          summary << '全面'
         else
-          summary << '片' + line[line.length-1].tr('Ａ-Ｚ', 'A-Z')
+          summary << '片面' + line[line.length-1].tr('Ａ-Ｚ', 'A-Z')
         end
       end
       if /^利用日時/ =~ line
