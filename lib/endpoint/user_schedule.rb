@@ -5,11 +5,11 @@ class UserSchedule
 
   def summary
     schedules = Schedule.in_future.not_cancelled.not_personal_practice.order_by_start
-    response_message = ["直近5日以内の予約で参加人数が6人未満の日があります。キャンセル忘れに注意してください。"]
+    response_message = ["直近5日以内の予約で参加人数が3人以下の日があります。キャンセル忘れに注意してください。"]
     require_notice = false
     schedules.each do |schedule|
       break if schedule.start > (Time.now + 5.day).end_of_day
-      if schedule.count_ok < 6
+      if schedule.count_ok <= 3
         response_message.push('-------------------')
         response_message.push("#{schedule.date_ja(true)}")
         response_message.push("#{schedule.description}")
