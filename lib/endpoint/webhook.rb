@@ -222,7 +222,7 @@ class Webhook
     schedules.each do |schedule|
       response_message.push("・#{schedule.date_ja(true).split("\n")[0]} #{schedule.description}") 
       response_message.push("    〇#{schedule.count_ok} △#{schedule.count_un} ×#{schedule.count_ko}")
-      require_notice = true if schedule.start > (Time.now + 5.day).end_of_day && schedule.count_ok <= 3
+      require_notice = true if schedule.start < (Time.now + 5.day).end_of_day && schedule.count_ok <= 3
     end
     response_message.push("-------------------\n直近5日以内の予約で参加人数が3人以下の日があります。キャンセル忘れに注意してください。") if require_notice
     send_msg_obj = Message.create_text_obj(response_message.join("\n"))
