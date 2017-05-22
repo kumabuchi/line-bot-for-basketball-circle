@@ -58,7 +58,7 @@ class UserSchedule
       profile = LineApi.profile(user.line_user_id);
       next if profile.nil?
       user.name = profile[:displayName]
-      user.profile_image_url = profile[:pictureUrl]
+      user.profile_image_url = profile[:pictureUrl].nil? ? "#{BASE_URL}static/images/default.jpg" : profile[:pictureUrl]
       user.save!
     end
   end
