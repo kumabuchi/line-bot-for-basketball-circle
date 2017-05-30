@@ -6,7 +6,7 @@ class Schedule < ActiveRecord::Base
   scope :not_personal_practice, -> { where.not('description like ?', '%信開%') }
   scope :order_by_start, -> { order("start") }
 
-  def date_ja(require_new_line = false)
+  def date_ja(require_new_line = false, color_holiday = false)
     start_local = self.start.in_time_zone("Asia/Tokyo")
     end_local   = self.end.in_time_zone("Asia/Tokyo")
     date_str = nil
@@ -21,17 +21,19 @@ class Schedule < ActiveRecord::Base
       date_str = start_local.strftime("%-m月%-d日(%a)%-H:%M") + '-' + end_local.strftime("%-m月%-d日(%a)%-H:%M")
     end
     date_str = date_str.gsub(')', ")\n")
-    convert_week(date_str)
+    convert_week(date_str, color_holiday)
   end
 
-  def convert_week(date_str)
-    date_str.gsub!('Sun', '日')
+  def convert_week(date_str, color_holiday)
+    sunday_ja = color_holiday ? '<span style="color: hotpink;">日</span>' : '日'
+    satday_ja = color_holiday ? '<span style="color: mediumaquamarine;">土</span>' : '土'
+    date_str.gsub!('Sun', sunday_ja)
     date_str.gsub!('Mon', '月')
     date_str.gsub!('Tue', '火')
     date_str.gsub!('Wed', '水')
     date_str.gsub!('Thu', '木')
     date_str.gsub!('Fri', '金')
-    date_str.gsub!('Sat', '土')
+    date_str.gsub!('Sat', satday_ja)
     date_str
   end
 
