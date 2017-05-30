@@ -25,8 +25,8 @@ class Schedule < ActiveRecord::Base
   end
 
   def convert_week(date_str, color_holiday)
-    sunday_ja = color_holiday ? '<span style="color: hotpink;">日</span>' : '日'
-    satday_ja = color_holiday ? '<span style="color: mediumaquamarine;">土</span>' : '土'
+    sunday_ja = color_holiday ? '<span style="color: rgb(255,64,129);">日</span>' : '日'
+    satday_ja = color_holiday ? '<span style="color: #33CC66;">土</span>' : '土'
     date_str.gsub!('Sun', sunday_ja)
     date_str.gsub!('Mon', '月')
     date_str.gsub!('Tue', '火')
