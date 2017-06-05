@@ -8,7 +8,7 @@ class UserSchedule
     response_message = ["直近5日以内の予約で参加人数が3人以下の日があります。キャンセル忘れに注意してください。"]
     require_notice = false
     schedules.each do |schedule|
-      break if schedule.start >= (Time.now + 4.day).end_of_day
+      break if schedule.start >= (Time.now + 5.day).beginning_of_day
       if schedule.count_ok <= 3
         response_message.push('-------------------')
         response_message.push("#{schedule.date_ja(true)}")
@@ -129,7 +129,7 @@ class UserSchedule
       schedule = Schedule.find_by_id(id)
       if schedule
         participation = Participation.find_or_create_by(user_id: user.id, schedule_id: id)
-        if schedule.start <= (Time.now + 5.day).end_of_day && participation.propriety == 1 && val != 'ok'
+        if schedule.start < (Time.now + 3.day).beginning_of_day && participation.propriety == 1 && val != 'ok'
           message.push('-------------------')
           message.push("#{schedule.date_ja(true)}")
           message.push("#{schedule.description}")
