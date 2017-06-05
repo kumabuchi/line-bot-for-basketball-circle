@@ -8,7 +8,7 @@ class UserSchedule
     response_message = ["直近5日以内の予約で参加人数が3人以下の日があります。キャンセル忘れに注意してください。"]
     require_notice = false
     schedules.each do |schedule|
-      break if schedule.start >= (Time.now + 5.day).end_of_day
+      break if schedule.start >= (Time.now + 4.day).end_of_day
       if schedule.count_ok <= 3
         response_message.push('-------------------')
         response_message.push("#{schedule.date_ja(true)}")
@@ -123,16 +123,30 @@ class UserSchedule
   def update(random_hash, params)
     user = User.find_by(random: random_hash)
     raise 'ユーザが見つかりませんでした' unless user
+    message = ["#{user.name}さんが以下の直近開催イベントの参加表を〇から× or △に変更したようです。。"]
+    require_notice = false
     params.each do |id, val|
-      if Schedule.find_by_id(id)
-        p = Participation.find_or_create_by(user_id: user.id, schedule_id: id)
-        p.propriety = case val
+      schedule = Schedule.find_by_id(id)
+      if schedule
+        participation = Participation.find_or_create_by(user_id: user.id, schedule_id: id)
+        if schedule.start <= (Time.now + 5.day).end_of_day && participation.propriety == 1 && val != 'ok'
+          message.push('-------------------')
+          message.push("#{schedule.date_ja(true)}")
+          message.push("#{schedule.description}")
+          require_notice = true
+        end
+        participation.propriety = case val
           when 'ko' then -1
           when 'un' then 0
           when 'ok' then 1
         end
-        p.save!
+        participation.save!
       end
+    end
+    return unless require_notice
+    send_msg_obj = Message.create_text_obj(message.join("\n"))
+    ENV['ADMIN_USERS'].split(",").each do |admin_user|
+      LineApi.push(admin_user, send_msg_obj)
     end
   end
 end
