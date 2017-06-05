@@ -4,7 +4,7 @@ class UserSchedule
   end
 
   def summary
-    schedules = Schedule.in_future.not_cancelled.not_personal_practice.order_by_start
+    schedules = Schedule.in_future.not_cancelled.not_personal_practice.not_foo_fighters_practice.order_by_start
     response_message = ["直近5日以内の予約で参加人数が3人以下の日があります。キャンセル忘れに注意してください。"]
     require_notice = false
     schedules.each do |schedule|
