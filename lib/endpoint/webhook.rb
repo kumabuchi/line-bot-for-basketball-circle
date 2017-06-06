@@ -274,6 +274,27 @@ class Webhook
     LineApi.reply(param[:replyToken], send_msg_obj)
   end
 
+  def start_dialogue(param, msg, source_id)
+    `touch #{ROOT_DIR}/tmp/#{source_id}`
+    send_msg_obj = Message.create_text_obj("#{msg}！少しお話しましょうか！")
+    LineApi.reply(param[:replyToken], send_msg_obj)
+  end
+
+  def finish_dialogue(param, msg, source_id)
+    `rm #{ROOT_DIR}/tmp/#{source_id}`
+    send_msg_obj = Message.create_text_obj("#{msg}！楽しかったです、またお話しましょう！")
+    LineApi.reply(param[:replyToken], send_msg_obj)
+  end
+
+  def dialogue(param, msg, source_id)
+    context = `cat #{ROOT_DIR}/tmp/#{source_id}`
+    response_json = `curl -H "Accept: application/json" -H "Content-type: application/json" -X POST -d '{"utt":#{msg.inspect}, "context":"#{context.strip}"}' "https://api.apigw.smt.docomo.ne.jp/dialogue/v1/dialogue?APIKEY=#{ENV['DOCOMO_DIALOGUE_API_KEY']}"`
+    response = JSON.parse(response_json, symbolize_names: true)
+    `echo #{response[:context]} > #{ROOT_DIR}/tmp/#{source_id}`
+    send_msg_obj = Message.create_text_obj("#{response[:utt]}")
+    LineApi.reply(param[:replyToken], send_msg_obj)
+  end
+
   def follow(param)
     profile = LineApi.profile(param[:source][:userId]);
     user = User.find_or_create_by(line_user_id: profile[:userId])
@@ -309,6 +330,8 @@ class Webhook
       "【抽選】\n続けてユーザ名を空白区切りで入力すると、ランダムにユーザを抽選します。",
       "【qr:*】\n任意の文字列(*)を表すQRコードを生成します。",
       "【ゲーム】\nスマホで遊べるゲームの一覧を返します。",
+      "【おはよう|こんにちは|こんばんは】\nヘッドコーチと雑談を始めます。",
+      "【さようなら】\nヘッドコーチとの雑談を終了します。",
       "【参加可否】\n参加表の登録用URLを取得します。(個人LINEでのみ有効)",
       "【URL変更】\n参加表の登録用URLを変更します。(個人LINEでのみ有効)",
       "【ユーザ情報更新】\nLINEのユーザ名や画像の変更を、参加表の表示に反映します。(個人LINEでのみ有効)"

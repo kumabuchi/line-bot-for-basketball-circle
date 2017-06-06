@@ -75,6 +75,7 @@ class Controller < Sinatra::Base
    
     params[:events].each do |param|
       break if !param[:source][:groupId].nil? && param[:source][:groupId] != ENV['GROUP_ID']
+      source_id = param[:source][:groupId].nil? ? param[:source][:userId] : param[:source][:groupId]
 
       if param[:type] == 'follow'
         Webhook.new.follow(param)
@@ -140,6 +141,15 @@ class Controller < Sinatra::Base
           Webhook.new.sticker_response(param, '161', '2')
         elsif msg.include?('キャンセルします') || msg.include?('キャンセルしまーす')
           Webhook.new.sticker_response(param, '16', '1')
+        else
+          next if source_id.nil? || msg.blank?
+          if (msg == 'こんにちは' || msg == 'こんばんは' || msg == 'おはよう') && !File.exist?("#{ROOT_DIR}/tmp/#{source_id}")
+            Webhook.new.start_dialogue(param, msg, source_id)
+          elsif msg == 'さようなら' && File.exist?("#{ROOT_DIR}/tmp/#{source_id}")
+            Webhook.new.finish_dialogue(param, msg, source_id)
+          elsif File.exist?("#{ROOT_DIR}/tmp/#{source_id}")
+            Webhook.new.dialogue(param, msg, source_id)
+          end
         end
       end
     end 
