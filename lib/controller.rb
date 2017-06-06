@@ -118,6 +118,8 @@ class Controller < Sinatra::Base
           Webhook.new.calc(param)
         elsif /^超初級$|^初級$|^初中級$|^中級$/ =~ msg
           Webhook.new.competition(param, msg)
+        elsif /^よち$|^ぷち$|^ぴよ$|^わい$|^よちMIX$|^ぷちMIX$|^ぴよMIX$/ =~ msg
+          Webhook.new.competition2(param, msg)
         elsif msg.downcase.start_with?('qr:')
           Webhook.new.qr(param)
         elsif msg.downcase.start_with?('抽選')

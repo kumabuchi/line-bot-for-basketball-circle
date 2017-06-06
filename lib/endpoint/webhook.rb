@@ -83,6 +83,51 @@ class Webhook
     end
     response_message.push("------------------")
     response_message.push("and more.. http://www.sportsone.jp/basketball/")
+    response_message.push("レベルについて： http://www.sportsone.jp/basketball/beginner.html#level")
+    send_msg_obj = Message.create_text_obj(response_message.join("\n"))
+    LineApi.reply(param[:replyToken], send_msg_obj)
+  end
+
+  def competition2(param, level)
+    class_id = case level
+      when 'よち'    then 20
+      when 'ぷち'    then 39
+      when 'ぴよ'    then 9
+      when 'わい'    then 10
+      when 'よちMIX' then 21
+      when 'ぷちMIX' then 40
+      when 'ぴよMIX' then 16
+    end
+    date = nil
+    time = nil
+    location = nil
+    vacancy = nil
+    link = nil
+    html = HTTParty.get("https://cry55.com/products/list.php?mode=search&area_id[]=12&area_id[]=36&class_id[]=#{class_id}&search=")
+    response_message = ["#{level}の試合リストです"]
+    lines = html.split("\n")
+    lines.each_with_index do |line, index|
+      date = lines[index+1].strip if line.include?("tournament-list-article__item schedule")
+      time = Sanitize.clean(line).strip  if line.include?("tournament-list-article__item meeting")
+      location = Sanitize.clean(line).strip if line.include?("tournament-list-article__item state")
+      vacancy = lines[index+2].strip if line.include?("<!--FS ADD-->")
+      link = line.split("\"")[1] if line.include?("詳細・申し込み")
+      if line.include?("tournament-list-article__title") && !date.nil? && !time.nil? && !location.nil? && !vacancy.blank? && !link.nil?
+        response_message.push("------------------")
+        response_message.push("#{date} #{time}")
+        response_message.push("#{Sanitize.clean(line).strip}【#{location}】 残り#{vacancy}")
+        response_message.push("https://cry55.com#{link}")
+        date = nil
+        time = nil
+        location = nil
+        vacancy = nil
+        link = nil
+      end
+      break if response_message.size >= 37
+    end
+    response_message.push("------------------")
+    response_message.push("and more.. https://cry55.com/products/list.php?mode=search&area_id[]=12&area_id[]=36&class_id[]=#{class_id}&search=")
+    response_message.push("レベルについて： https://cry55.com/user_data/class.php")
     send_msg_obj = Message.create_text_obj(response_message.join("\n"))
     LineApi.reply(param[:replyToken], send_msg_obj)
   end
@@ -258,7 +303,8 @@ class Webhook
       "【サマリ】\n参加表のサマリを返します。",
       "【動画URL】\n練習や試合動画の参照用URLを返します。",
       "【(四則演算の数式)】\n計算結果を返します。",
-      "【超初級|初級|初中級|中級】\n東京と千葉の試合リストを表示します。",
+      "【超初級|初級|初中級|中級】\n東京と千葉のSportsOne主催の試合リストを表示します。",
+      "【よち|ぷち|ぴよ|わい|よちMIX|ぷちMIX|ぴよMIX】\n東京と千葉のCRYSTAREA主催の試合リストを表示します。",
       "【チーム分け】\n続けてユーザ名を空白区切りで入力すると、ランダムにチーム分けします。",
       "【抽選】\n続けてユーザ名を空白区切りで入力すると、ランダムにユーザを抽選します。",
       "【qr:*】\n任意の文字列(*)を表すQRコードを生成します。",
