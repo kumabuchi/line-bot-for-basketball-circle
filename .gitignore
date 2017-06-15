@@ -8,5 +8,5 @@ tmp/pids/*.pid
 config/secret.json
 config/google-calendar.yaml
 config/db/basketball.db
-static/qr/*.png
-static/slamdunk/*.png
+webroot/static/qr/*.png
+webroot/static/slamdunk/*.png
