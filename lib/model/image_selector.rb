@@ -94,6 +94,6 @@ class ImageSelector
   ]
 
   def self.random
-    "#{BASE_URL}static/slamdunk/#{@@images.sample}"
+    "#{Settings.base_url}static/slamdunk/#{@@images.sample}"
   end
 end

@@ -1,0 +1,15 @@
+db:
+  name: basketball
+  adapter: sqlite3
+base_url: https://<SERVICE_URL>
+line:
+  access_token: <LINE_ACCESS_TOKEN>
+google:
+  calendar:
+    access_code: <GOOGLE_CALENDAR_ACCESS_CODE>
+docomo:
+  dialogue:
+    api_key: <DOCOMO_DIALOGUE_API_KEY>
+group_id: <GROUP_ID>
+admin_users:
+  - <ADMIN_ID>

@@ -1,7 +1,6 @@
 Bundler.require(:default)
 require 'active_record'
 
-BASE_URL = 'https://mgm.basketball.balthazar.tokyo/'
 ROOT_DIR = File.expand_path("..", __FILE__);
 Dir["#{ROOT_DIR}/config/initializers/**/*.rb"].sort.each do |initializer|
   load(initializer)

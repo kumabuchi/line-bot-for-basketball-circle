@@ -2,7 +2,7 @@ class LineApi
   @@endpoint_uri = 'https://api.line.me/v2/bot/'
   @@default_header = {
     'Content-Type'  => 'application/json',
-    'Authorization' => "Bearer #{ENV['ACCESS_TOKEN']}"
+    'Authorization' => "Bearer #{Settings.line.access_token}"
   }
 
   def self.reply(token, send_msg_obj)

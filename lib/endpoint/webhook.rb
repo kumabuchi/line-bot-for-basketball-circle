@@ -146,7 +146,7 @@ class Webhook
     end
     user = User.find_by(line_user_id: param[:source][:userId])
     raise 'DBがfollow状況と不整合です' unless user
-    send_msg_obj = Message.create_text_obj("参加可否の登録はこちらのURLからどうぞ！(#{user.name}さん専用のURLです。PCからもアクセスできます。)\n#{BASE_URL}schedule/#{user.random}")
+    send_msg_obj = Message.create_text_obj("参加可否の登録はこちらのURLからどうぞ！(#{user.name}さん専用のURLです。PCからもアクセスできます。)\n#{Settings.base_url}schedule/#{user.random}")
     LineApi.reply(param[:replyToken], send_msg_obj)
   end
 
@@ -160,7 +160,7 @@ class Webhook
     raise 'DBがfollow状況と不整合です' unless user
     user.random = User.generate_random(50)
     user.save!
-    send_msg_obj = Message.create_text_obj("参加可否登録用URLを変更しました！以下のURLからアクセスしてください。(以前のURLは利用出来なくなりました。)\n#{BASE_URL}schedule/#{user.random}")
+    send_msg_obj = Message.create_text_obj("参加可否登録用URLを変更しました！以下のURLからアクセスしてください。(以前のURLは利用出来なくなりました。)\n#{Settings.base_url}schedule/#{user.random}")
     LineApi.reply(param[:replyToken], send_msg_obj)
   end
 
@@ -217,7 +217,7 @@ class Webhook
   end
 
   def schedule(param)
-    send_msg_obj = Message.create_text_obj("参加表の確認はこちらからどうぞ！\n#{BASE_URL}schedule")
+    send_msg_obj = Message.create_text_obj("参加表の確認はこちらからどうぞ！\n#{Settings.base_url}schedule")
     LineApi.reply(param[:replyToken], send_msg_obj)
   end
 
@@ -288,7 +288,7 @@ class Webhook
 
   def dialogue(param, msg, source_id)
     context = `cat #{ROOT_DIR}/tmp/#{source_id}`
-    response_json = `curl -H "Accept: application/json" -H "Content-type: application/json" -X POST -d '{"utt":#{msg.inspect}, "context":"#{context.strip}"}' "https://api.apigw.smt.docomo.ne.jp/dialogue/v1/dialogue?APIKEY=#{ENV['DOCOMO_DIALOGUE_API_KEY']}"`
+    response_json = `curl -H "Accept: application/json" -H "Content-type: application/json" -X POST -d '{"utt":#{msg.inspect}, "context":"#{context.strip}"}' "https://api.apigw.smt.docomo.ne.jp/dialogue/v1/dialogue?APIKEY=#{Settings.docomo.dialogue.api_key}"`
     response = JSON.parse(response_json, symbolize_names: true)
     `echo #{response[:context]} > #{ROOT_DIR}/tmp/#{source_id}`
     send_msg_obj = Message.create_text_obj("#{response[:utt]}")

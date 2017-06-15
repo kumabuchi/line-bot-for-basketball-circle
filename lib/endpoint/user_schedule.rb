@@ -19,7 +19,7 @@ class UserSchedule
     end
     return unless require_notice
     send_msg_obj = Message.create_text_obj(response_message.join("\n"))
-    ENV['ADMIN_USERS'].split(",").each do |admin_user|
+    Settings.admin_users.each do |admin_user|
       LineApi.push(admin_user, send_msg_obj)
     end
   end
@@ -50,7 +50,7 @@ class UserSchedule
         'http://qq4q.biz/yIFs'
       ].join("\n")
       send_msg_obj = Message.create_text_obj(response_message)
-      LineApi.push(ENV['GROUP_ID'], send_msg_obj)
+      LineApi.push(Settings.group_id, send_msg_obj)
     end
 
     # bug: 削除済みアカウントのprofileは404
@@ -58,7 +58,7 @@ class UserSchedule
       profile = LineApi.profile(user.line_user_id);
       next if profile.nil?
       user.name = profile[:displayName]
-      user.profile_image_url = profile[:pictureUrl].nil? ? "#{BASE_URL}static/images/default.jpg" : profile[:pictureUrl]
+      user.profile_image_url = profile[:pictureUrl].nil? ? "#{Settings.base_url}static/images/default.jpg" : profile[:pictureUrl]
       user.save!
     end
   end
@@ -73,7 +73,7 @@ class UserSchedule
         'http://qq4q.biz/yIFs'
       ].join("\n")
       send_msg_obj = Message.create_text_obj(response_message)
-      LineApi.push(ENV['GROUP_ID'], send_msg_obj)
+      LineApi.push(Settings.group_id, send_msg_obj)
       
       participants = Participation.in_schedule(schedule.id).participant
       participants.each do |participant|
@@ -103,7 +103,7 @@ class UserSchedule
           message = [
             '【リクエスト】',
             "1週間以内に開催予定のイベントの参加可否が未登録もしくは△になっています。以下のURLからアクセスして〇or×の登録をお願いします。",
-            "#{BASE_URL}schedule/#{user.random}"
+            "#{Settings.base_url}schedule/#{user.random}"
           ].join("\n")
           send_msg_obj = Message.create_text_obj(message)
           LineApi.push(user.line_user_id, send_msg_obj)
@@ -145,7 +145,7 @@ class UserSchedule
     end
     return unless require_notice
     send_msg_obj = Message.create_text_obj(message.join("\n"))
-    ENV['ADMIN_USERS'].split(",").each do |admin_user|
+    Settings.admin_users.each do |admin_user|
       LineApi.push(admin_user, send_msg_obj)
     end
   end

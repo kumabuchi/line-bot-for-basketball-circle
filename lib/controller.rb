@@ -19,7 +19,7 @@ class Controller < Sinatra::Base
     send_msg_obj = Message.create_text_obj(
       "システムエラーが発生したようです。。。\nERROR: #{e.message}"
     )
-    ENV['ADMIN_USERS'].split(",").each do |admin_user|
+    Settings.admin_users.each do |admin_user|
       LineApi.push(admin_user, send_msg_obj)
     end
     erb :error_500, layout: false
@@ -74,7 +74,7 @@ class Controller < Sinatra::Base
     @logger.info(params)
    
     params[:events].each do |param|
-      break if !param[:source][:groupId].nil? && param[:source][:groupId] != ENV['GROUP_ID']
+      break if !param[:source][:groupId].nil? && param[:source][:groupId] != Settings.group_id
       source_id = param[:source][:groupId].nil? ? param[:source][:userId] : param[:source][:groupId]
 
       if param[:type] == 'follow'

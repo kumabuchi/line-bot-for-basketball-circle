@@ -7,8 +7,8 @@ class GoogleCalendar
 
   OOB_URI = 'urn:ietf:wg:oauth:2.0:oob'
   APPLICATION_NAME = 'linebot'
-  CLIENT_SECRETS_PATH = "#{ROOT_DIR}/config/secret.json"
-  CREDENTIALS_PATH = "#{ROOT_DIR}/config/google-calendar.yaml"
+  CLIENT_SECRETS_PATH = "#{ROOT_DIR}/config/google/secret.json"
+  CREDENTIALS_PATH = "#{ROOT_DIR}/config/google/calendar.yaml"
   SCOPE = Google::Apis::CalendarV3::AUTH_CALENDAR
   CALENDAR_ID = 'primary'
 
@@ -73,7 +73,7 @@ class GoogleCalendar
  
     if credentials.nil?
       url = authorizer.get_authorization_url(base_url: OOB_URI)
-      code = ENV['GOOGLE_CALENDAR_ACCESS_CODE']
+      code = Settings.google.calendar.access_token
       credentials = authorizer.get_and_store_credentials_from_code(user_id: user_id, code: code, base_url: OOB_URI)
     end
     credentials
