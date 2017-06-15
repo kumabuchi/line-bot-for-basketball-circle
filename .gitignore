@@ -1,12 +1,11 @@
 vendor
 .bundle
 
-script
 log/*.log
 tmp/*.sock
 tmp/pids/*.pid
-config/secret.json
-config/google-calendar.yaml
+config/application.yml
+config/google/*
 config/db/basketball.db
 webroot/static/qr/*.png
 webroot/static/slamdunk/*.png
