@@ -8,7 +8,7 @@ class Controller < Sinatra::Base
 
   not_found do
     status 404
-    erb :error_404, layout: false
+    erb :'html/error_404', layout: false
   end
 
   error do |e|
@@ -21,37 +21,37 @@ class Controller < Sinatra::Base
     Settings.admin_users.each do |admin_user|
       LineApi.push(admin_user, send_msg_obj)
     end
-    erb :error_500, layout: false
-  end
-
-  get '/schedule/sync' do
-    UserSchedule.new.sync
-    erb :rest, layout: false
+    erb :'html/error_500', layout: false
   end
 
   get '/schedule/remind' do
     UserSchedule.new.remind
-    erb :rest, layout: false
+    erb :'rest/status_and_message', layout: false
   end
 
   get '/schedule/request' do
     UserSchedule.new.request
-    erb :rest, layout: false
+    erb :'rest/status_and_message', layout: false
   end
 
   get '/schedule/summary' do
     UserSchedule.new.summary
-    erb :rest, layout: false
+    erb :'rest/status_and_message', layout: false
+  end
+
+  get '/schedule/sync' do
+    UserSchedule.new.sync
+    erb :'rest/status_and_message', layout: false
   end
 
   get '/schedule' do
     @schedules = UserSchedule.new.schedule
-    erb :schedule
+    erb :'html/schedule'
   end
 
   get '/schedule/:random_hash' do |random_hash|
     @user, @schedules = UserSchedule.new.personal_schedule(random_hash)
-    erb :personal_schedule
+    erb :'html/personal_schedule'
   end
 
   post '/schedule/:random_hash' do |random_hash|
@@ -143,6 +143,6 @@ class Controller < Sinatra::Base
         end
       end
     end 
-    erb :rest, layout: false
+    erb :'rest/status_and_message', layout: false
   end
 end
