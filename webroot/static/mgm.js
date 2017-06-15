@@ -1,5 +1,6 @@
 
 $('.mdl-button--icon').on('click', function() {
+  if(!$(".ok-button").length) { return; }
   $(this).siblings().removeClass("mdl-button--accent");
   $(this).siblings().removeClass("mdl-button--backgroundcolor-accent");
   $(this).addClass('mdl-button--accent');

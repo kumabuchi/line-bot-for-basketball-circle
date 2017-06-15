@@ -8,7 +8,6 @@ class Controller < Sinatra::Base
 
   not_found do
     status 404
-    @message = 'ファイルが見つかりませんでした。'
     erb :error_404, layout: false
   end
 
@@ -27,29 +26,21 @@ class Controller < Sinatra::Base
 
   get '/schedule/sync' do
     UserSchedule.new.sync
-    @status = 'OK'
-    @message = ''
     erb :rest, layout: false
   end
 
   get '/schedule/remind' do
     UserSchedule.new.remind
-    @status = 'OK'
-    @message = ''
     erb :rest, layout: false
   end
 
   get '/schedule/request' do
     UserSchedule.new.request
-    @status = 'OK'
-    @message = ''
     erb :rest, layout: false
   end
 
   get '/schedule/summary' do
     UserSchedule.new.summary
-    @status = 'OK'
-    @message = ''
     erb :rest, layout: false
   end
 
@@ -60,7 +51,6 @@ class Controller < Sinatra::Base
 
   get '/schedule/:random_hash' do |random_hash|
     @user, @schedules = UserSchedule.new.personal_schedule(random_hash)
-    @load_js_mgm = true
     erb :personal_schedule
   end
 
@@ -153,8 +143,6 @@ class Controller < Sinatra::Base
         end
       end
     end 
-    @status = 'OK'
-    @message = ''
     erb :rest, layout: false
   end
 end
