@@ -1,13 +1,15 @@
 class Webhook
   def cheer(param)
-    image_url = ImageSelector.random
-    send_msg_obj = Message.create_image_obj(image_url)
-    LineApi.reply(param[:replyToken], send_msg_obj)
+    Dir.chdir("#{ROOT_DIR}/webroot/static/slamdunk") do 
+      image_name = Dir.glob("*.png").sample
+      send_msg_obj = Message.create_image_obj("#{Settings.base_url}static/slamdunk/#{image_name}")
+      LineApi.reply(param[:replyToken], send_msg_obj)
+    end
   end
 
   def say(param)
-    saying = SayingSelector.random
-    send_msg_obj = Message.create_text_obj(saying)
+    serif = YAML.load_file("#{ROOT_DIR}/config/yaml/serif.yml").sample
+    send_msg_obj = Message.create_text_obj(serif)
     LineApi.reply(param[:replyToken], send_msg_obj)
   end
 
