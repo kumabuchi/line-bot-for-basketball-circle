@@ -96,11 +96,11 @@ class UserSchedule
       next unless schedule
       participation = Participation.find_or_create_by(user_id: user.id, schedule_id: id)
       propriety = Participation.convert_propriety(val)
+      notice_schedules.push(schedule) if schedule.start < (Time.now + Settings.notice.update.day).beginning_of_day && participation.propriety == 1 && propriety != 1
       participation.propriety = propriety
       participation.save!
-      notice_schedules.push(schedule) if schedule.start < (Time.now + Settings.notice.update.day).beginning_of_day && participation.propriety == 1 && propriety != 1
     end
-    return if schedules_require_notice.empty?
+    return if notice_schedules.empty?
     erb = File.read("#{ROOT_DIR}/lib/views/message/update_user_schedule.erb")
     send_msg_obj = Message.create_text_obj(ERB.new(erb, nil, '-').result(binding))
     Settings.admin_users.each do |admin_user|
