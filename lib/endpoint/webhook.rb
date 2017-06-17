@@ -61,7 +61,7 @@ class Webhook
   end
 
   def sportsone(param, level)
-    xml = HTTParty.get(Settings.sportsone_url, :format => :xml)
+    xml = HTTParty.get(Settings.url.sportsone, :format => :xml)
     erb = File.read("#{ROOT_DIR}/lib/views/message/sportsone.erb")
     send_msg_obj = Message.create_text_obj(ERB.new(erb, nil, '-').result(binding))
     LineApi.reply(param[:replyToken], send_msg_obj)
@@ -77,7 +77,7 @@ class Webhook
       when 'ぷちMIX' then 40
       when 'ぴよMIX' then 16
     end
-    html = HTTParty.get("#{Settings.crystarea_url}#{class_id}")
+    html = HTTParty.get("#{Settings.url.crystarea}#{class_id}")
     erb = File.read("#{ROOT_DIR}/lib/views/message/crystarea.erb")
     send_msg_obj = Message.create_text_obj(ERB.new(erb, nil, '-').result(binding))
     LineApi.reply(param[:replyToken], send_msg_obj)

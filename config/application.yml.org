@@ -1,7 +1,10 @@
+base_url: https://<SERVICE_URL>
+group_id: <GROUP_ID>
+admin_users:
+  - <ADMIN_ID>
 db:
   name: basketball
   adapter: sqlite3
-base_url: https://<SERVICE_URL>
 line:
   access_token: <LINE_ACCESS_TOKEN>
 google:
@@ -10,12 +13,10 @@ google:
 docomo:
   dialogue:
     api_key: <DOCOMO_DIALOGUE_API_KEY>
-group_id: <GROUP_ID>
-admin_users:
-  - <ADMIN_ID>
-movie_url: <DROPBOX_MOVIE_URL>
-sportsone_url: http://www.sportsone.jp/xml/events_stock.xml
-crystarea_url: https://cry55.com/products/list.php?mode=search&area_id[]=12&area_id[]=36&class_id[]=
+url:
+  dropbox: <DROPBOX_MOVIE_URL>
+  sportsone: http://www.sportsone.jp/xml/events_stock.xml
+  crystarea: https://cry55.com/products/list.php?mode=search&area_id[]=12&area_id[]=36&class_id[]=
 error:
   db_inconsistency: DBがfollow状況と不整合です。
   user_not_found: ユーザが見つかりませんでした。
