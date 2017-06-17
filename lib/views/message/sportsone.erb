@@ -1,0 +1,15 @@
+SPORTSONE主催【<%= level -%>】の試合リストです。
+<% xml['rss']['channel']['item'].map do |item|
+     desc = item['description'].split(/[|;]/)
+     if item['title'].include?('バスケット') && item['title'].include?("【#{level}】") && 
+        (desc[2].include?('東京') || desc[2].include?('千葉')) && !desc[9].include?('満員') -%>
+------------------
+<%=  desc[1].split(':')[0] -%><%= desc[15] -%>～
+<%=  desc[3].split(':')[0] -%><%= desc[9] %>
+<%=  item['link'] %>
+<%   end
+   end
+-%>
+------------------
+and more.. http://www.sportsone.jp/basketball/
+レベルについて： http://www.sportsone.jp/basketball/beginner.html#level

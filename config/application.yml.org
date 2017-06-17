@@ -13,3 +13,16 @@ docomo:
 group_id: <GROUP_ID>
 admin_users:
   - <ADMIN_ID>
+movie_url: <DROPBOX_MOVIE_URL>
+sportsone_url: http://www.sportsone.jp/xml/events_stock.xml
+crystarea_url: https://cry55.com/products/list.php?mode=search&area_id[]=12&area_id[]=36&class_id[]=
+error:
+  db_inconsistency: DBがfollow状況と不整合です。
+  user_not_found: ユーザが見つかりませんでした。
+notice:
+  update: 3
+  cancel_day: 5
+  cancel_member: 3
+color:
+  sunday: '#ff4081'
+  saturday: '#33CC66'

@@ -1,0 +1,5 @@
+以下のチーム分けでどうでしょう？
+<% teams.each do |name, members| -%>
+  【<%= name %>】
+  <%= members.sort.join(',') %>
+<% end %>

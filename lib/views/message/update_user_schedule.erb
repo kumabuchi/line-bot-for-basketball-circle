@@ -1,0 +1,6 @@
+<%= user.name -%>さんが以下の直近開催イベントの参加表を〇から× or △に変更したようです。。
+<% notice_schedules.each do |schedule| -%>
+-------------------
+<%= schedule.date_ja(true) %>
+<%= schedule.description %>
+<% end %>

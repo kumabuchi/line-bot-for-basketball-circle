@@ -2,7 +2,7 @@ class Message
   def self.create_text_obj(text)
     {
       type: 'text',
-      text: text
+      text: text.strip
     }
   end
 

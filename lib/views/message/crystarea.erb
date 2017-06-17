@@ -1,0 +1,21 @@
+CRYSTAREA主催【<%= level -%>】の試合リストです。
+<% date = time = location = vacancy = link = nil
+   lines = html.split("\n")
+   lines.each_with_index do |line, index|
+     date = lines[index+1].strip if line.include?("tournament-list-article__item schedule")
+     time = Sanitize.clean(line).strip  if line.include?("tournament-list-article__item meeting")
+     location = Sanitize.clean(line).strip if line.include?("tournament-list-article__item state")
+     vacancy = lines[index+2].strip if line.include?("<!--FS ADD-->")
+     link = line.split("\"")[1] if line.include?("詳細・申し込み")
+     if line.include?("tournament-list-article__title") && !date.nil? && !time.nil? && !location.nil? && !vacancy.blank? && !link.nil? -%>
+------------------
+<%= date -%><%= time %>
+<%= Sanitize.clean(line).strip -%>【<%= location -%>】 残り<%= vacancy %>
+https://cry55.com<%= link %>
+<%     date = time = location = vacancy = link = nil 
+     end
+   end
+-%>
+------------------
+and more.. https://cry55.com/products/list.php?mode=search&area_id[]=12&area_id[]=36&class_id[]=<%= class_id -%>&search=
+レベルについて： https://cry55.com/user_data/class.php

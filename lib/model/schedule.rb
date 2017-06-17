@@ -26,8 +26,8 @@ class Schedule < ActiveRecord::Base
   end
 
   def convert_week(date_str, color_holiday)
-    sunday_ja = color_holiday ? '<span style="color: rgb(255,64,129);">日</span>' : '日'
-    satday_ja = color_holiday ? '<span style="color: #33CC66;">土</span>' : '土'
+    sunday_ja = color_holiday ? "<span style='color: #{Settings.color.sunday};'>日</span>" : '日'
+    satday_ja = color_holiday ? "<span style='color: #{Settings.color.saturday};'>土</span>" : '土'
     date_str.gsub!('Sun', sunday_ja)
     date_str.gsub!('Mon', '月')
     date_str.gsub!('Tue', '火')
@@ -48,5 +48,9 @@ class Schedule < ActiveRecord::Base
 
   def count_ko
     Participation.where(schedule_id: self.id).where(propriety: -1).count
+  end
+
+  def self.update_cancel_all
+    update_all("is_cancelled = 1")
   end
 end

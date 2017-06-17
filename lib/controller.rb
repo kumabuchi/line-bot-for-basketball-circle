@@ -15,9 +15,8 @@ class Controller < Sinatra::Base
     status 500
     @message = e.message
     @logger.error("#{e.message}")
-    send_msg_obj = Message.create_text_obj(
-      "システムエラーが発生したようです。。。\nERROR: #{e.message}"
-    )
+    e_erb = File.read("#{ROOT_DIR}/lib/views/message/error.erb")
+    send_msg_obj = Message.create_text_obj(ERB.new(e_erb, nil, '-').result(binding))
     Settings.admin_users.each do |admin_user|
       LineApi.push(admin_user, send_msg_obj)
     end
@@ -108,9 +107,9 @@ class Controller < Sinatra::Base
         elsif msg.match(/^([0-9\+\-\*\/\(\)\%\^\.\:]+)$/)
           Webhook.new.calc(param)
         elsif /^超初級$|^初級$|^初中級$|^中級$/ =~ msg
-          Webhook.new.competition(param, msg)
+          Webhook.new.sportsone(param, msg)
         elsif /^よち$|^ぷち$|^ぴよ$|^わい$|^よちMIX$|^ぷちMIX$|^ぴよMIX$/ =~ msg
-          Webhook.new.competition2(param, msg)
+          Webhook.new.crystarea(param, msg)
         elsif msg.downcase.start_with?('qr:')
           Webhook.new.qr(param)
         elsif msg.downcase.start_with?('抽選')
@@ -133,11 +132,11 @@ class Controller < Sinatra::Base
           Webhook.new.sticker_response(param, '16', '1')
         else
           next if source_id.nil? || msg.blank?
-          if (msg == 'こんにちは' || msg == 'こんばんは' || msg == 'おはよう') && !File.exist?("#{ROOT_DIR}/tmp/#{source_id}")
+          if (msg == 'こんにちは' || msg == 'こんばんは' || msg == 'おはよう') && !File.exist?("#{ROOT_DIR}/tmp/dialogue/#{source_id}")
             Webhook.new.start_dialogue(param, msg, source_id)
-          elsif msg == 'さようなら' && File.exist?("#{ROOT_DIR}/tmp/#{source_id}")
+          elsif msg == 'さようなら' && File.exist?("#{ROOT_DIR}/tmp/dialogue/#{source_id}")
             Webhook.new.finish_dialogue(param, msg, source_id)
-          elsif File.exist?("#{ROOT_DIR}/tmp/#{source_id}")
+          elsif File.exist?("#{ROOT_DIR}/tmp/dialogue/#{source_id}")
             Webhook.new.dialogue(param, msg, source_id)
           end
         end

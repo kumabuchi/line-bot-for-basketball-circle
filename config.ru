@@ -8,7 +8,7 @@ end
 
 ActiveRecord::Base.establish_connection(
   "adapter"  => Settings.db.adapter,
-  "database" => "#{ROOT_DIR}/config/db/#{Settings.db.name}.db"
+  "database" => "#{ROOT_DIR}#{Settings.db.path}"
 )
 
 require("#{ROOT_DIR}/lib/model.rb")

@@ -1,0 +1,9 @@
+<% if answer.length > 1000 %>
+桁が大きすぎてここに書ききれないようです。。。
+<% elsif answer.include?('Divide by zero') %>
+0で割ってはいけないと学校で習ったはずですが？
+<% elsif answer.include?('error') %>
+数式は合っていますか？使える演算子は +-*/%^ です！
+<% else %>
+答えは <%= answer -%> ですね！
+<% end %>

@@ -1,0 +1,6 @@
+参加表のサマリです～
+-------------------
+<% schedules.each do |schedule| -%>
+・<%= schedule.date_ja(true).split("\n")[0] -%> <%= schedule.description %>
+    〇<%= schedule.count_ok -%> △<%= schedule.count_un -%> ×<%= schedule.count_ko %>
+<% end %>
