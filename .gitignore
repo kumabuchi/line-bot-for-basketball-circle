@@ -4,8 +4,8 @@ vendor
 log/*.log
 tmp/*.sock
 tmp/pids/*.pid
+tmp/dialogue/*
 config/application.yml
 config/google/*
 config/db/basketball.db
 webroot/static/qr/*.png
-webroot/static/slamdunk/*.png
