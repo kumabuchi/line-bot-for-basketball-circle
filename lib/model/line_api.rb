@@ -1,4 +1,5 @@
 class LineApi
+  @@logger = Logger.new('log/sinatra.log')
   @@endpoint_uri = 'https://api.line.me/v2/bot/'
   @@default_header = {
     'Content-Type'  => 'application/json',
@@ -6,11 +7,13 @@ class LineApi
   }
 
   def self.reply(token, send_msg_obj)
+    @@logger.info(send_msg_obj)
     contents = { replyToken: token, messages: [send_msg_obj].flatten }
     RestClient.post(@@endpoint_uri+'message/reply', contents.to_json, @@default_header)
   end
 
   def self.push(to, send_msg_obj)
+    @@logger.info(send_msg_obj)
     contents = { to: to, messages: [send_msg_obj].flatten }
     RestClient.post(@@endpoint_uri+'message/push', contents.to_json, @@default_header)
   end
