@@ -226,17 +226,15 @@ class Webhook
     LineApi.reply(param[:replyToken], send_msg_obj)
   end
 
-  def dialogue(param, msg, source_id)
-    context = File.read("#{ROOT_DIR}/tmp/dialogue/#{source_id}")
+  def dialogue(param, msg)
     response = HTTParty.post(
       "https://api.apigw.smt.docomo.ne.jp/dialogue/v1/dialogue?APIKEY=#{Settings.docomo.dialogue.api_key}",
       :body    => { :utt     => "#{msg.inspect}",
-                    :context => "#{context.strip}"
+                    :context => "#{Settings.docomo.dialogue.context}"
                   }.to_json,
       :headers => { 'Content-Type' => 'application/json',
                     'Accept'       => 'application/json' }
     )
-    File.write("#{ROOT_DIR}/tmp/dialogue/#{source_id}", response['context'])
     send_msg_obj = Message.create_text_obj("#{response['utt']}")
     LineApi.reply(param[:replyToken], send_msg_obj)
   end

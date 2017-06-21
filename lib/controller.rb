@@ -132,12 +132,14 @@ class Controller < Sinatra::Base
           Webhook.new.sticker_response(param, '16', '1')
         else
           next if source_id.nil? || msg.blank?
-          if (msg == 'こんにちは' || msg == 'こんばんは' || msg == 'おはよう') && !File.exist?("#{ROOT_DIR}/tmp/dialogue/#{source_id}")
+          if param[:source][:groupId].nil?
+            Webhook.new.dialogue(param, msg)
+          elsif (msg == 'こんにちは' || msg == 'こんばんは' || msg == 'おはよう') && !File.exist?("#{ROOT_DIR}/tmp/dialogue/#{source_id}")
             Webhook.new.start_dialogue(param, msg, source_id)
           elsif msg == 'さようなら' && File.exist?("#{ROOT_DIR}/tmp/dialogue/#{source_id}")
             Webhook.new.finish_dialogue(param, msg, source_id)
           elsif File.exist?("#{ROOT_DIR}/tmp/dialogue/#{source_id}")
-            Webhook.new.dialogue(param, msg, source_id)
+            Webhook.new.dialogue(param, msg)
           end
         end
       end
