@@ -54,6 +54,7 @@ class Controller < Sinatra::Base
   end
 
   post '/schedule/:random_hash' do |random_hash|
+    @logger.info(@params)
     UserSchedule.new.update(random_hash, @params)
     redirect to('/schedule')
   end
