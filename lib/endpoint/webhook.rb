@@ -12,8 +12,9 @@ class Webhook
   end
 
   def game(param)
-    games = Games.create_games_message_obj
-    LineApi.reply(param[:replyToken], games)
+    yaml = ERB.new(File.read("#{ROOT_DIR}/lib/views/message/game.erb"), nil, '-').result(binding)
+    send_msg_obj = YAML.load(yaml)
+    LineApi.reply(param[:replyToken], send_msg_obj)
   end
 
   def sticker_response(param, sticker_id, package_id)
