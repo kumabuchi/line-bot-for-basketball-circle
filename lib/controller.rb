@@ -6,6 +6,21 @@ class Controller < Sinatra::Base
     @logger = Logger.new('log/sinatra.log')
   end
 
+  ['/schedule/remind/:token', '/schedule/request/:token', '/schedule/summary/:token', '/schedule/sync/:token'].each do |path|
+    before path do
+      token = File.read("#{ROOT_DIR}/tmp/token")
+      # update token for next request
+      File.write("#{ROOT_DIR}/tmp/token", "#{User.generate_random(50)}")
+      content_type :json
+      unless params[:token] == token
+        status 403
+        @status = 'NG'
+        @message = 'Access Forbidden'
+        erb :'rest/status_and_message', layout: false
+      end
+    end
+  end
+
   not_found do
     status 404
     erb :'html/error_404', layout: false
@@ -23,22 +38,22 @@ class Controller < Sinatra::Base
     erb :'html/error_500', layout: false
   end
 
-  get '/schedule/remind' do
+  get '/schedule/remind/:token' do
     UserSchedule.new.remind
     erb :'rest/status_and_message', layout: false
   end
 
-  get '/schedule/request' do
+  get '/schedule/request/:token' do
     UserSchedule.new.request
     erb :'rest/status_and_message', layout: false
   end
 
-  get '/schedule/summary' do
+  get '/schedule/summary/:token' do
     UserSchedule.new.summary
     erb :'rest/status_and_message', layout: false
   end
 
-  get '/schedule/sync' do
+  get '/schedule/sync/:token' do
     UserSchedule.new.sync
     erb :'rest/status_and_message', layout: false
   end
@@ -103,6 +118,8 @@ class Controller < Sinatra::Base
           Webhook.new.game(param)
         elsif msg == 'サマリ' || msg == 'サマリー'
           Webhook.new.summary(param)
+        elsif msg == 'カレンダー同期'
+          UserSchedule.new.sync
         elsif /^予約申込の完了/ =~ msg
           Webhook.new.add_reservation(param)
         elsif msg.match(/^([0-9\+\-\*\/\(\)\%\^\.\:]+)$/)
@@ -145,6 +162,7 @@ class Controller < Sinatra::Base
         end
       end
     end 
+    content_type :json
     erb :'rest/status_and_message', layout: false
   end
 end

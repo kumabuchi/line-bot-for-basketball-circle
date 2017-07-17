@@ -1,1 +1,3 @@
-curl -v -X GET https://dev.basketball.balthazar.tokyo/schedule/request
+#!/bin/sh
+cd ~/git/line-bot-for-dev
+curl -v -X GET https://dev.basketball.balthazar.tokyo/schedule/request/`cat tmp/token`

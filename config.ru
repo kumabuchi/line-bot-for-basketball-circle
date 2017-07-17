@@ -15,4 +15,6 @@ require("#{ROOT_DIR}/lib/model.rb")
 require("#{ROOT_DIR}/lib/endpoint.rb")
 require("#{ROOT_DIR}/lib/controller.rb")
 
+File.write("#{ROOT_DIR}/tmp/token", "#{User.generate_random(50)}")
+
 run Controller
