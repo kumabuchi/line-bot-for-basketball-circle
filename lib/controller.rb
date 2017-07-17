@@ -112,8 +112,6 @@ class Controller < Sinatra::Base
           Webhook.new.set_request(param, false)
         elsif msg == 'ヘルプ'
           Webhook.new.help(param)
-        elsif msg == '動画URL'
-          Webhook.new.movie(param)
         elsif msg == 'ゲーム'
           Webhook.new.game(param)
         elsif msg == 'サマリ' || msg == 'サマリー'
@@ -138,7 +136,7 @@ class Controller < Sinatra::Base
           Webhook.new.cheer(param)
         elsif msg.include?('名言')
           Webhook.new.say(param)
-        elsif msg.include?('全面')
+        elsif msg.include?('全面です') || msg.include?('全面になりました')
           Webhook.new.sticker_response(param, '19', '2')
         elsif msg.include?('ドタ参')
           Webhook.new.sticker_response(param, '114', '1')
@@ -146,8 +144,10 @@ class Controller < Sinatra::Base
           Webhook.new.sticker_response(param, '520', '2')
         elsif msg.include?('出勤') || msg.include?('仕事')
           Webhook.new.sticker_response(param, '161', '2')
-        elsif msg.include?('キャンセルします') || msg.include?('キャンセルしまーす')
+        elsif msg.include?('キャンセルします') || msg.include?('キャンセルしました')
           Webhook.new.sticker_response(param, '16', '1')
+        elsif msg.include?('動画URL')
+          Webhook.new.movie(param)
         else
           next if source_id.nil? || msg.blank?
           if param[:source][:groupId].nil?
