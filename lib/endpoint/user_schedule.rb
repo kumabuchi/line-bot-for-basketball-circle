@@ -103,8 +103,6 @@ class UserSchedule
     return if notice_schedules.empty?
     erb = File.read("#{ROOT_DIR}/lib/views/message/update_user_schedule.erb")
     send_msg_obj = Message.create_text_obj(ERB.new(erb, nil, '-').result(binding))
-    Settings.admin_users.each do |admin_user|
-      LineApi.push(admin_user, send_msg_obj)
-    end
+    LineApi.push(Settings.group_id, send_msg_obj)
   end
 end
