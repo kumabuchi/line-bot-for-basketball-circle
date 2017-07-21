@@ -38,6 +38,17 @@ class Controller < Sinatra::Base
     erb :'html/error_500', layout: false
   end
 
+  post '/api/search' do
+    content_type :json
+    Api.new.search.to_json
+  end
+
+  post '/api/query' do
+    content_type :json
+    params = JSON.parse(request.body.read, symbolize_names: true)
+    Api.new.query(params).to_json
+  end
+
   get '/schedule/remind/:token' do
     UserSchedule.new.remind
     erb :'rest/status_and_message', layout: false

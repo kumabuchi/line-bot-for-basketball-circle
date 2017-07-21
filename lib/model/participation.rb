@@ -1,7 +1,8 @@
 class Participation < ActiveRecord::Base
-  scope :participant, -> { where(propriety: 1) }
-  scope :in_schedule, ->(id) { where(schedule_id: id) }
-  scope :order_by_id, -> { order("user_id") }
+  scope :in_schedule,       ->(id) { where(schedule_id: id) }
+  scope :participant,       -> { where(propriety: 1) }
+  scope :order_by_id,       -> { order('user_id') }
+  scope :group_by_schedule, -> { group('schedule_id') }
 
   def self.convert_propriety(propriety_str)
     case propriety_str
