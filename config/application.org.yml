@@ -16,6 +16,7 @@ docomo:
     context: <DIALOGUE_CONTEXT>
 url:
   dropbox: <DROPBOX_MOVIE_URL>
+  grafana: <GRAFANA_URL>
   sportsone: http://www.sportsone.jp/xml/events_stock.xml
   crystarea: https://cry55.com/products/list.php?mode=search&area_id[]=12&area_id[]=36&class_id[]=
 error:

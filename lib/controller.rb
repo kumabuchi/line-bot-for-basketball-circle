@@ -159,6 +159,8 @@ class Controller < Sinatra::Base
           Webhook.new.sticker_response(param, '16', '1')
         elsif msg.include?('動画URL')
           Webhook.new.movie(param)
+        elsif msg.include?('監視URL')
+          Webhook.new.monitoring(param)
         else
           next if source_id.nil? || msg.blank?
           if param[:source][:groupId].nil?
