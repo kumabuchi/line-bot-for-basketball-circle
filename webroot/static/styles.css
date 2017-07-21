@@ -276,6 +276,7 @@ html, body {
 }
 .personal-schedule-description {
   margin-top: 10px !important;
+  overflow: hidden;
 }
 .personal-schedule-button {
   margin-top: 10px !important;
