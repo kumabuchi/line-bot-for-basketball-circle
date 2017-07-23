@@ -68,15 +68,18 @@ class Api
   end
 
   def execution_rate
-    past_total         = Schedule.in_past.not_personal_practice.not_foo_fighters_practice.count
-    past_not_cancelled = Schedule.in_past.not_personal_practice.not_foo_fighters_practice.not_like_cancelled.count
-    { target: ACTIVE_USERS, datapoints: [ [past_not_cancelled.to_f/past_total.to_f * 100.0, DateTime.now] ] }
+    past_total         = Schedule.last_three_months.not_personal_practice.not_foo_fighters_practice.count
+    past_not_cancelled = Schedule.last_three_months.not_personal_practice.not_foo_fighters_practice.not_like_cancelled.count
+    { target: EXECUTION_RATE, datapoints: [ [past_not_cancelled.to_f/past_total.to_f * 100.0, DateTime.now] ] }
   end
 
   def participations_mean
-    total_participations = Participation.participant.count
-    total_schedules      = Schedule.in_past.not_personal_practice.not_foo_fighters_practice.not_like_cancelled.count
-    { target: PARTICIPATIONS_MEAN, datapoints: [ [total_participations.to_f/total_schedules.to_f, DateTime.now] ] }
+    counter = 0
+    past_schedules = Schedule.last_three_months.not_personal_practice.not_foo_fighters_practice.not_like_cancelled
+    past_schedules.each do |schedule|
+      counter += schedule.count_ok
+    end
+    { target: PARTICIPATIONS_MEAN, datapoints: [ [counter.to_f/past_schedules.count.to_f, DateTime.now] ] }
   end
 
   def access_transition

@@ -1,6 +1,6 @@
 class Schedule < ActiveRecord::Base
   scope :in_future, -> { where("start >= ?", Date.today ) }
-  scope :in_past, -> { where("start < ?", Date.today ) }
+  scope :last_three_months, -> { where(start: (Time.now - 3.months).end_of_day..Time.now.tomorrow.beginning_of_day) }
   scope :in_tomorrow, -> { where(start: Time.now.tomorrow.beginning_of_day..Time.now.tomorrow.end_of_day) }
   scope :in_week, -> { where(start: Time.now.tomorrow.beginning_of_day..(Time.now + 1.week).end_of_day) }
   scope :not_like_cancelled, -> { where.not('description like ?', '%キャンセル%') }
