@@ -57,7 +57,7 @@ class Api
     metrics = []
     log_raw = `awk -F [ '"#{from.strftime('%Y-%m-%dT%H:%M:%S')}" < $2 && $2 <= "#{to.strftime('%Y-%m-%dT%H:%M:%S')}"' #{ROOT_DIR}/log/sinatra.log`
     log_raw.each_line do |line|
-      timestr = line.scan(/[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}/)
+      timestr = line.scan(/[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}\.[0-9]{6}/)
       metrics.push([mask(line), timestr[0]]) unless timestr.empty?
     end
     { target: APPLICATION_LOG, datapoints: metrics }
