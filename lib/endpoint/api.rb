@@ -74,12 +74,14 @@ class Api
   end
 
   def participations_mean
-    counter = 0
+    ok_counter = 0
+    zero_schedule_counter = 0
     past_schedules = Schedule.last_three_months.not_personal_practice.not_foo_fighters_practice.not_like_cancelled
     past_schedules.each do |schedule|
-      counter += schedule.count_ok
+      ok_counter += schedule.count_ok
+      zero_schedule_counter += 1 if schedule.count_ok == 0
     end
-    { target: PARTICIPATIONS_MEAN, datapoints: [ [counter.to_f/past_schedules.count.to_f, DateTime.now] ] }
+    { target: PARTICIPATIONS_MEAN, datapoints: [ [ok_counter.to_f/(past_schedules.count-zero_schedule_counter).to_f, DateTime.now] ] }
   end
 
   def access_transition
