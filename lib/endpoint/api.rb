@@ -68,14 +68,14 @@ class Api
   end
 
   def execution_rate
-    past_total     = Schedule.in_past.not_personal_practice.not_foo_fighters_practice.count
-    past_cancelled = Schedule.in_past.not_personal_practice.not_foo_fighters_practice.cancelled.count
-    { target: ACTIVE_USERS, datapoints: [ [(past_total-past_cancelled)/past_total * 100, DateTime.now] ] }
+    past_total         = Schedule.in_past.not_personal_practice.not_foo_fighters_practice.count
+    past_not_cancelled = Schedule.in_past.not_personal_practice.not_foo_fighters_practice.not_like_cancelled.count
+    { target: ACTIVE_USERS, datapoints: [ [past_not_cancelled.to_f/past_total.to_f * 100.0, DateTime.now] ] }
   end
 
   def participations_mean
     total_participations = Participation.participant.count
-    total_schedules      = Schedule.in_past.not_personal_practice.not_foo_fighters_practice.count
+    total_schedules      = Schedule.in_past.not_personal_practice.not_foo_fighters_practice.not_like_cancelled.count
     { target: PARTICIPATIONS_MEAN, datapoints: [ [total_participations.to_f/total_schedules.to_f, DateTime.now] ] }
   end
 
