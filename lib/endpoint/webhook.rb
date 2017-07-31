@@ -185,24 +185,6 @@ class Webhook
     LineApi.reply(param[:replyToken], send_msg_obj)
   end
 
-  def update(param)
-    if param[:source][:groupId]
-      erb = File.read("#{ROOT_DIR}/lib/views/message/update_error.erb")
-      send_msg_obj = Message.create_text_obj(ERB.new(erb, nil, '-').result(binding))
-      LineApi.reply(param[:replyToken], send_msg_obj)
-    else
-      user = User.find_by(line_user_id: param[:source][:userId])
-      raise Settings.error.db_inconsistency unless user
-      profile = LineApi.profile(param[:source][:userId]);
-      user.name = profile[:displayName]
-      user.profile_image_url = profile[:pictureUrl]
-      user.save!
-      erb = File.read("#{ROOT_DIR}/lib/views/message/update.erb")
-      send_msg_obj = Message.create_text_obj(ERB.new(erb, nil, '-').result(binding))
-      LineApi.reply(param[:replyToken], send_msg_obj)
-    end
-  end
-
   def add_reservation(param)
     responses = GoogleCalendar.new.add_reservation(param[:message][:text])
     erb = responses.empty? ?

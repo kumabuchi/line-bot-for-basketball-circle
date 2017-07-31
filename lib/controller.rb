@@ -114,8 +114,6 @@ class Controller < Sinatra::Base
           Webhook.new.participation(param)
         elsif msg == 'URL変更'
           Webhook.new.generate_random_hash(param)
-        elsif msg == 'ユーザ情報更新'
-          Webhook.new.update(param)
         elsif msg == '通知設定'
           Webhook.new.setting(param)
         elsif msg == 'リマインドオン'
@@ -132,9 +130,11 @@ class Controller < Sinatra::Base
           Webhook.new.game(param)
         elsif msg == 'サマリ' || msg == 'サマリー'
           Webhook.new.summary(param)
-        elsif msg == 'カレンダー同期'
+        elsif msg == 'カレンダー同期' && is_admin(source_id)
           UserSchedule.new.sync
-        elsif /^予約申込の完了/ =~ msg
+        elsif msg == 'ユーザ情報更新' && is_admin(source_id)
+          UserSchedule.new.sync_profile
+        elsif /^予約申込の完了/ =~ msg && is_admin(source_id)
           Webhook.new.add_reservation(param)
         elsif msg.match(/^([0-9\+\-\*\/\(\)\%\^\.\:]+)$/)
           Webhook.new.calc(param)
@@ -182,5 +182,11 @@ class Controller < Sinatra::Base
     end 
     content_type :json
     erb :'rest/status_and_message', layout: false
+  end
+
+  private
+
+  def is_admin(user_id)
+    Settings.admin_users.include?(user_id)
   end
 end
