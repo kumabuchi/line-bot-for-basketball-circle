@@ -10,3 +10,4 @@ config/application.yml
 config/google/*
 config/db/basketball.db
 webroot/static/qr/*.png
+webroot/static/profiles/*

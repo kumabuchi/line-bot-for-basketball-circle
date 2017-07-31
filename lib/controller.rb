@@ -64,6 +64,11 @@ class Controller < Sinatra::Base
     erb :'rest/status_and_message', layout: false
   end
 
+  get '/schedule/sync/profile/:token' do
+    UserSchedule.new.sync_profile
+    erb :'rest/status_and_message', layout: false
+  end
+
   get '/schedule/sync/:token' do
     UserSchedule.new.sync
     erb :'rest/status_and_message', layout: false

@@ -21,5 +21,8 @@ class LineApi
   def self.profile(user_id)
     response = RestClient.get("#{@@endpoint_uri}profile/#{user_id}", @@default_header)
     JSON.parse(response.body, symbolize_names: true)
+  rescue HTTParty::ResponseError => e
+    @@logger.error("#{e.message}")
+    nil
   end
 end

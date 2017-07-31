@@ -36,13 +36,19 @@ class UserSchedule
       send_msg_obj = Message.create_text_obj(ERB.new(erb, nil, '-').result(binding))
       LineApi.push(Settings.group_id, send_msg_obj)
     end
+  end
 
-    # bug: 削除済みアカウントのprofileは404
+  def sync_profile
     User.all.each do |user|
       profile = LineApi.profile(user.line_user_id);
       next if profile.nil?
       user.name = profile[:displayName]
-      user.profile_image_url = profile[:pictureUrl].nil? ? "#{Settings.base_url}static/images/default.jpg" : profile[:pictureUrl]
+      if profile[:pictureUrl].nil?
+        user.profile_image_url = "#{Settings.base_url}static/images/default.jpg"
+      else
+        `wget #{profile[:pictureUrl]} -O #{ROOT_DIR}/webroot/static/profiles/#{get_filename(profile[:pictureUrl])}`
+        user.profile_image_url = "#{Settings.base_url}static/profiles/#{get_filename(profile[:pictureUrl])}"
+      end
       user.save!
     end
   end
@@ -104,5 +110,12 @@ class UserSchedule
     erb = File.read("#{ROOT_DIR}/lib/views/message/update_user_schedule.erb")
     send_msg_obj = Message.create_text_obj(ERB.new(erb, nil, '-').result(binding))
     LineApi.push(Settings.group_id, send_msg_obj)
+  end
+
+  private
+
+  def get_filename(url)
+    url =~ /([^\/]+?)([\?#].*)?$/
+    $&
   end
 end
