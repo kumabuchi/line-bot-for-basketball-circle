@@ -173,6 +173,14 @@ class Webhook
     LineApi.reply(param[:replyToken], send_msg_obj)
   end
 
+  def merge_url(param)
+    user = User.find_by(line_user_id: param[:source][:userId])
+    raise Settings.error.db_inconsistency unless user
+    erb = File.read("#{ROOT_DIR}/lib/views/message/merge_url.erb")
+    send_msg_obj = Message.create_text_obj(ERB.new(erb, nil, '-').result(binding))
+    LineApi.reply(param[:replyToken], send_msg_obj)
+  end
+
   def movie(param)
     erb = File.read("#{ROOT_DIR}/lib/views/message/movie.erb")
     send_msg_obj = Message.create_text_obj(ERB.new(erb, nil, '-').result(binding))

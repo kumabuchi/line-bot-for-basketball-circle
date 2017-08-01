@@ -6,17 +6,27 @@ class Controller < Sinatra::Base
     @logger = Logger.new('log/sinatra.log')
   end
 
+  ['/schedule/merge/:random_hash'].each do |path|
+    before path do
+      user = User.find_by(random: params[:random_hash])
+      if user.nil? || !Settings.admin_users.include?(user.line_user_id)
+        @message = 'Access Forbidden'
+        html = erb :'html/error_500', layout: false
+        halt 403, html
+      end
+    end
+  end
+
   ['/schedule/remind/:token', '/schedule/request/:token', '/schedule/summary/:token', '/schedule/sync/:token'].each do |path|
     before path do
       token = File.read("#{ROOT_DIR}/tmp/token")
       # update token for next request
       File.write("#{ROOT_DIR}/tmp/token", "#{User.generate_random(50)}")
-      content_type :json
       unless params[:token] == token
-        status 403
         @status = 'NG'
         @message = 'Access Forbidden'
-        erb :'rest/status_and_message', layout: false
+        json = erb :'rest/status_and_message', layout: false
+        halt 403, json
       end
     end
   end
@@ -72,6 +82,21 @@ class Controller < Sinatra::Base
   get '/schedule/sync/:token' do
     UserSchedule.new.sync
     erb :'rest/status_and_message', layout: false
+  end
+
+  get '/schedule/merge/:random_hash' do
+    @schedules, @src, @dest = UserSchedule.new.get_source_and_destination(@params)
+    if @src && @dest
+      erb :'html/merge_check'
+    else
+      erb :'html/merge'
+    end
+  end
+
+  post '/schedule/merge/:random_hash' do
+    print @params
+    UserSchedule.new.merge(@params)
+    redirect to('/schedule')
   end
 
   get '/schedule' do
@@ -134,6 +159,8 @@ class Controller < Sinatra::Base
           UserSchedule.new.sync
         elsif msg == 'ユーザ情報更新' && is_admin(source_id)
           UserSchedule.new.sync_profile
+        elsif msg == 'マージ' && is_admin(source_id)
+          Webhook.new.merge_url(param)
         elsif /^予約申込の完了/ =~ msg && is_admin(source_id)
           Webhook.new.add_reservation(param)
         elsif msg.match(/^([0-9\+\-\*\/\(\)\%\^\.\:]+)$/)

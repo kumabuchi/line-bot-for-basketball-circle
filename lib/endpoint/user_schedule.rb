@@ -112,6 +112,31 @@ class UserSchedule
     LineApi.push(Settings.group_id, send_msg_obj)
   end
 
+  def get_source_and_destination(params)
+    schedules = Schedule.not_personal_practice.order(start: :desc).limit(30)
+    src = dest = nil
+    unless params.nil?
+      params.each do |key, val|
+        schedule = Schedule.find_by_id(val)
+        next unless schedule
+        src  = schedule if key == 'src'
+        dest = schedule if key == 'dest'
+      end
+    end
+    [schedules, src, dest]
+  end
+
+  def merge(params)
+    `cp #{ROOT_DIR}/config/db/basketball.db #{ROOT_DIR}/tmp/db/#{Time.now.strftime("%Y%m%d%H%M%S")}.db`
+    src  = Schedule.find_by_id(params['src'])
+    dest = Schedule.find_by_id(params['dest'])
+    Participation.where(schedule_id: src.id).each do |p|
+      next if Participation.where(schedule_id: dest.id).where(user_id: p.user_id).take
+      participation = Participation.create(user_id: p.user_id, schedule_id: dest.id, propriety: p.propriety)
+      participation.save! 
+    end
+  end
+
   private
 
   def get_filename(url)

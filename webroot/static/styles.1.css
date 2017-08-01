@@ -250,6 +250,12 @@ html, body {
 .ok-button {
   text-align: center !important;
 }
+.check-button {
+  text-align: center !important;
+}
+.merge-button {
+  text-align: center !important;
+}
 .thumbnail {
   height: 32px !important;
 }

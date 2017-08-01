@@ -1,0 +1,122 @@
+<section class="section--center" style="margin: 0 auto;">
+  <h4 class="mdl-cell mdl-cell--12-col">マージ元</h4>
+</section>
+<section class="section--center mdl-grid mdl-grid--no-spacing mdl-shadow--2dp">
+  <div class="mdl-card mdl-cell mdl-cell--12-col">
+    <div class="mdl-card__supporting-text mdl-grid mdl-grid--no-spacing" style="overflow-y: auto; margin: 10px; width: calc(100% - 20px);">
+      <% participations = Participation.where(schedule_id: @src.id).order_by_id %>
+      <h4 class="mdl-cell mdl-cell--12-col"><b><%= @src.date_ja(false, true) %></b><br><%= @src.description.strip %><br>
+      <button class="static-mark mdl-button mdl-js-button mdl-button--icon mdl-button--accent"><i class="material-icons">panorama_fish_eye</i></button><%= @src.count_ok %>
+      <button class="static-mark mdl-button mdl-js-button mdl-button--icon"><i class="material-icons">change_history</i></button><%= @src.count_un %>
+      <button class="static-mark mdl-button mdl-js-button mdl-button--icon"><i class="material-icons">clear</i></button><%= @src.count_ko %>
+      </h4>
+      <% if participations.size > 0 %>
+      <% participations.each do |p| %>
+      <% user = User.find_by(id: p.user_id) %>
+      <% next unless user %>
+      <div class="section__text mdl-cell mdl-cell--10-col-desktop mdl-cell--5-col-tablet mdl-cell--3-col-phone">
+        <div class="thumbnail">
+          <img class="profile-image" src="<%= user.profile_image_url %>"/>
+          <span style="font-size: 140%;"><%= user.name %></span>
+        </div>
+      </div>
+      <div class="section__text mdl-cell mdl-cell--2-col-desktop mdl-cell--2-col-tablet mdl-cell--1-col-phone button-group">
+        <% if p.propriety == -1 %>
+        <button class="mdl-button mdl-js-button mdl-button--icon"><i class="material-icons">clear</i></button>
+        <% elsif p.propriety == 0 %>
+        <button class="mdl-button mdl-js-button mdl-button--icon"><i class="material-icons">change_history</i></button>
+        <% elsif p.propriety == 1 %>
+        <button class="mdl-button mdl-js-button mdl-button--icon mdl-button--accent"><i class="material-icons">panorama_fish_eye</i></button>
+        <% end %>
+      </div>
+      <% end %>
+      <% end %>
+      <div></div>
+    </div>
+  </div>
+</section>
+
+<section class="section--center" style="margin: 0 auto;">
+  <h4 class="mdl-cell mdl-cell--12-col">マージ先</h4>
+</section>
+<section class="section--center mdl-grid mdl-grid--no-spacing mdl-shadow--2dp">
+  <div class="mdl-card mdl-cell mdl-cell--12-col">
+    <div class="mdl-card__supporting-text mdl-grid mdl-grid--no-spacing" style="overflow-y: auto; margin: 10px; width: calc(100% - 20px);">
+      <% participations = Participation.where(schedule_id: @dest.id).order_by_id %>
+      <h4 class="mdl-cell mdl-cell--12-col"><b><%= @dest.date_ja(false, true) %></b><br><%= @dest.description.strip %><br>
+      <button class="static-mark mdl-button mdl-js-button mdl-button--icon mdl-button--accent"><i class="material-icons">panorama_fish_eye</i></button><%= @dest.count_ok %>
+      <button class="static-mark mdl-button mdl-js-button mdl-button--icon"><i class="material-icons">change_history</i></button><%= @dest.count_un %>
+      <button class="static-mark mdl-button mdl-js-button mdl-button--icon"><i class="material-icons">clear</i></button><%= @dest.count_ko %>
+      </h4>
+      <% if participations.size > 0 %>
+      <% participations.each do |p| %>
+      <% user = User.find_by(id: p.user_id) %>
+      <% next unless user %>
+      <div class="section__text mdl-cell mdl-cell--10-col-desktop mdl-cell--5-col-tablet mdl-cell--3-col-phone">
+        <div class="thumbnail">
+          <img class="profile-image" src="<%= user.profile_image_url %>"/>
+          <span style="font-size: 140%;"><%= user.name %></span>
+        </div>
+      </div>
+      <div class="section__text mdl-cell mdl-cell--2-col-desktop mdl-cell--2-col-tablet mdl-cell--1-col-phone button-group">
+        <% if p.propriety == -1 %>
+        <button class="mdl-button mdl-js-button mdl-button--icon"><i class="material-icons">clear</i></button>
+        <% elsif p.propriety == 0 %>
+        <button class="mdl-button mdl-js-button mdl-button--icon"><i class="material-icons">change_history</i></button>
+        <% elsif p.propriety == 1 %>
+        <button class="mdl-button mdl-js-button mdl-button--icon mdl-button--accent"><i class="material-icons">panorama_fish_eye</i></button>
+        <% end %>
+      </div>
+      <% end %>
+      <% end %>
+      <div></div>
+    </div>
+  </div>
+</section>
+
+<section class="section--center" style="margin: 0 auto;">
+  <h4 class="mdl-cell mdl-cell--12-col">マージ後</h4>
+</section>
+<section class="section--center mdl-grid mdl-grid--no-spacing mdl-shadow--2dp">
+  <div class="mdl-card mdl-cell mdl-cell--12-col">
+    <div class="mdl-card__supporting-text mdl-grid mdl-grid--no-spacing" style="margin: 10px; width: calc(100% - 20px);">
+      <h4 class="mdl-cell mdl-cell--12-col"><b><%= @dest.date_ja(false, true) %></b><br><%= @dest.description.strip %><br>
+      <button class="static-mark mdl-button mdl-js-button mdl-button--icon mdl-button--accent"><i class="material-icons">panorama_fish_eye</i></button><%= @dest.count_ok %>
+      <button class="static-mark mdl-button mdl-js-button mdl-button--icon"><i class="material-icons">change_history</i></button><%= @dest.count_un %>
+      <button class="static-mark mdl-button mdl-js-button mdl-button--icon"><i class="material-icons">clear</i></button><%= @dest.count_ko %>
+      </h4>
+      
+      <% users = User.all %>
+      <% users.each do |user| %>
+      <% p = Participation.where(schedule_id: @dest.id).where(user_id: user.id).take %>
+      <% p = Participation.where(schedule_id: @src.id).where(user_id: user.id).take unless p %>
+      <% next unless p %>
+      <div class="section__text mdl-cell mdl-cell--10-col-desktop mdl-cell--5-col-tablet mdl-cell--3-col-phone">
+        <div class="thumbnail">
+          <img class="profile-image" src="<%= user.profile_image_url %>"/>
+          <span style="font-size: 140%;"><%= user.name %></span>
+        </div>
+      </div>
+      <div class="section__text mdl-cell mdl-cell--2-col-desktop mdl-cell--2-col-tablet mdl-cell--1-col-phone button-group">
+        <% if p.propriety == -1 %>
+        <button class="mdl-button mdl-js-button mdl-button--icon"><i class="material-icons">clear</i></button>
+        <% elsif p.propriety == 0 %>
+        <button class="mdl-button mdl-js-button mdl-button--icon"><i class="material-icons">change_history</i></button>
+        <% elsif p.propriety == 1 %>
+        <button class="mdl-button mdl-js-button mdl-button--icon mdl-button--accent"><i class="material-icons">panorama_fish_eye</i></button>
+        <% end %>
+      </div>
+      <% end %>
+
+      <div class="section__text mdl-cell merge-button" style="border-bottom-width: 0px; margin-top: 30px;">
+        <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent mdl-cell--3-col-desktop mdl-cell--8-col-tablet mdl-cell--5-col-phone">マージ実行</button>
+      </div>
+
+      <form id="submit-form" method="POST" action="./">
+        <input type="hidden" name="src" value="<%= @src.id %>"/>
+        <input type="hidden" name="dest" value="<%= @dest.id %>"/>
+        <button type="submit" id="submit-button"></button>
+      </form>
+    </div>
+  </div>
+</section>

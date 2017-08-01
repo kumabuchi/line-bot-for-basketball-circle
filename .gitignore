@@ -6,6 +6,7 @@ tmp/token
 tmp/*.sock
 tmp/pids/*.pid
 tmp/dialogue/*
+tmp/db/*.db
 config/application.yml
 config/google/*
 config/db/basketball.db
