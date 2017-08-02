@@ -33,8 +33,10 @@ $('.check-button').on('click', function() {
 });
 
 $('.merge-button').on('click', function() {
-  $("#submit-form").attr('action', location.href);
-  $("#submit-button").click();
+  if(window.confirm('この操作はやり直せませんのでご注意ください。マージを実行しますか？')){
+    $("#submit-form").attr('action', location.href);
+    $("#submit-button").click();
+  }
 });
 
 $('#src > li').on('click', function(e) {
