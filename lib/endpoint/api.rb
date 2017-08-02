@@ -45,7 +45,7 @@ class Api
 
   def grep_unicorn_log(from, to)
     metrics = []
-    log_raw = `awk -F [ '"#{from.strftime('%d/%b/%Y:%H:%M:%S')}" < $2 && $2 <= "#{to.strftime('%d/%b/%Y:%H:%M:%S')}"' #{ROOT_DIR}/log/unicorn.stderr.log | grep -v api`
+    log_raw = `awk -F [ '"#{to.beginning_of_month.strftime('%d/%b/%Y:%H:%M:%S')}" < $2 && $2 <= "#{to.strftime('%d/%b/%Y:%H:%M:%S')}"' #{ROOT_DIR}/log/unicorn.stderr.log | grep -v api | tail -n 300`
     log_raw.each_line do |line|
       timestr = line.scan(/[0-9]{2}\/[a-zA-Z]{3}\/[0-9]{4}:[0-9]{2}:[0-9]{2}:[0-9]{2}/)
       metrics.push([mask(line), timestr[0]]) unless timestr.empty?
