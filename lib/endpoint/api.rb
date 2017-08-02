@@ -39,6 +39,7 @@ class Api
 
   def mask(str)
     masked = str.gsub(/schedule\/[a-zA-Z0-9]{50}/, 'schedule/<<MASKED>>')
+    masked = masked.gsub(/merge\/[a-zA-Z0-9]{50}/, 'merge/<<MASKED>>')
     masked = masked.gsub(/"random_hash"=>"[a-zA-Z0-9]{50}"/, '"random_hash"=>"<<MASKED>>"')
     masked.gsub(/"captures"=>\["[a-zA-Z0-9]{50}"\]/, '"captures"=>["<<MASKED>>"]')
   end
