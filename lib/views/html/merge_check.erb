@@ -81,9 +81,6 @@
   <div class="mdl-card mdl-cell mdl-cell--12-col">
     <div class="mdl-card__supporting-text mdl-grid mdl-grid--no-spacing" style="margin: 10px; width: calc(100% - 20px);">
       <h4 class="mdl-cell mdl-cell--12-col"><b><%= @dest.date_ja(false, true) %></b><br><%= @dest.description.strip %><br>
-      <button class="static-mark mdl-button mdl-js-button mdl-button--icon mdl-button--accent"><i class="material-icons">panorama_fish_eye</i></button><%= @dest.count_ok %>
-      <button class="static-mark mdl-button mdl-js-button mdl-button--icon"><i class="material-icons">change_history</i></button><%= @dest.count_un %>
-      <button class="static-mark mdl-button mdl-js-button mdl-button--icon"><i class="material-icons">clear</i></button><%= @dest.count_ko %>
       </h4>
       
       <% users = User.all %>
