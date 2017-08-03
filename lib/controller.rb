@@ -85,7 +85,7 @@ class Controller < Sinatra::Base
   end
 
   get '/schedule/merge/:random_hash' do
-    @schedules, @src, @dest = UserSchedule.new.get_source_and_destination(@params)
+    @srcs, @dests, @src, @dest = UserSchedule.new.get_merge_src_and_dest(@params)
     if @src && @dest
       erb :'html/merge_check'
     else

@@ -112,8 +112,9 @@ class UserSchedule
     LineApi.push(Settings.group_id, send_msg_obj)
   end
 
-  def get_source_and_destination(params)
-    schedules = Schedule.not_personal_practice.order(start: :desc).limit(30)
+  def get_merge_src_and_dest(params)
+    srcs = Schedule.not_personal_practice.order(start: :desc).limit(30)
+    dests = Schedule.in_future.not_cancelled.not_personal_practice.order(start: :desc)
     src = dest = nil
     unless params.nil?
       params.each do |key, val|
@@ -123,7 +124,7 @@ class UserSchedule
         dest = schedule if key == 'dest'
       end
     end
-    [schedules, src, dest]
+    [srcs, dests, src, dest]
   end
 
   def merge(params)

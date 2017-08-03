@@ -5,7 +5,7 @@
       <input class="mdl-textfield__input" type="text" id="src-section" />
       <label class="mdl-textfield__label">マージ元</label>
       <ul id="src" name="src" class="mdl-menu mdl-menu--bottom-left mdl-js-menu mdl-js-ripple-effect" for="src-section">
-      <% @schedules.each do |s| %>
+      <% @srcs.each do |s| %>
         <li class="mdl-menu__item" value="<%= s.id %>"><%= s.date_ja %> <%= s.description.strip %> 〇<%= s.count_ok %> △<%= s.count_un %> ×<%= s.count_ko %></li>
       <% end %>
       </ul>
@@ -15,7 +15,7 @@
       <input class="mdl-textfield__input" type="text" id="dest-section" />
       <label class="mdl-textfield__label">マージ先</label>
       <ul id="dest" name="dest" class="mdl-menu mdl-menu--bottom-left mdl-js-menu mdl-js-ripple-effect" for="dest-section">
-      <% @schedules.each do |s| %>
+      <% @dests.each do |s| %>
         <li class="mdl-menu__item" value="<%= s.id %>"><%= s.date_ja %> <%= s.description.strip %> 〇<%= s.count_ok %> △<%= s.count_un %> ×<%= s.count_ko %></li>
       <% end %>
       </ul>
@@ -30,5 +30,15 @@
       <input type="hidden" name="dest" value=""/>
       <button type="submit" id="submit-button"></button>
     </form>
+
+    <hr/>
+    <span>
+      マージ元の参加可否情報をマージ先にコピーします。
+      その際、マージ先に参加可否情報が既に登録済みのユーザはコピーされません。
+      マージ元として指定出来るのは最新の予約済みイベントから30件分ですが、
+      マージ先は現在ユーザが参加可否を登録可能な状態のイベントのみです。
+      また、マージ元とマージ先に同じイベントを指定することはできません。
+      代表的なユースケースは、同日・異なる時間帯のイベントを後から新規に登録した場合等です。
+    </span>
   </div>
 </section>
