@@ -11,6 +11,11 @@ class UserSchedule
     Settings.admin_users.each do |admin_user|
       LineApi.push(admin_user, send_msg_obj)
     end
+    filename = Vbrowser.new.capture_reservation
+    send_msg_obj = Message.create_image_obj("#{Settings.base_url}static/reservation/#{filename}")
+    Settings.admin_users.each do |admin_user|
+      LineApi.push(admin_user, send_msg_obj)
+    end
   end
 
   def sync

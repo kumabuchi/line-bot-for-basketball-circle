@@ -5,6 +5,9 @@ admin_users:
 db:
   name: basketball
   adapter: sqlite3
+reservation:
+  id: <RESERVATION_SYSTEM_ID>
+  password: <RESERVATION_SYSTEM_PASSWORD>
 line:
   access_token: <LINE_ACCESS_TOKEN>
 google:

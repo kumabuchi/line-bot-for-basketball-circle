@@ -193,6 +193,12 @@ class Webhook
     LineApi.reply(param[:replyToken], send_msg_obj)
   end
 
+  def check_reservation(param)
+    filename = Vbrowser.new.capture_reservation
+    send_msg_obj = Message.create_image_obj("#{Settings.base_url}static/reservation/#{filename}")
+    LineApi.reply(param[:replyToken], send_msg_obj)
+  end
+
   def add_reservation(param)
     responses = GoogleCalendar.new.add_reservation(param[:message][:text])
     erb = responses.empty? ?

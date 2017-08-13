@@ -11,4 +11,5 @@ config/application.yml
 config/google/*
 config/db/basketball.db
 webroot/static/qr/*.png
+webroot/static/reservation/*.png
 webroot/static/profiles/*

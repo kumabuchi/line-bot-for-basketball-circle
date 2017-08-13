@@ -161,6 +161,8 @@ class Controller < Sinatra::Base
           UserSchedule.new.sync_profile
         elsif msg == 'マージ' && is_admin(source_id)
           Webhook.new.merge_url(param)
+        elsif msg == '予約確認' && is_admin(source_id)
+          Webhook.new.check_reservation(param)
         elsif /^予約申込の完了/ =~ msg && is_admin(source_id)
           Webhook.new.add_reservation(param)
         elsif msg.match(/^([0-9\+\-\*\/\(\)\%\^\.\:]+)$/)
