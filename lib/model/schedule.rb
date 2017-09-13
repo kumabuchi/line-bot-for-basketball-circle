@@ -1,13 +1,15 @@
 class Schedule < ActiveRecord::Base
-  scope :in_future, -> { where("start >= ?", Date.today ) }
-  scope :last_three_months, -> { where(start: (Time.now - 3.months).end_of_day..Time.now.tomorrow.beginning_of_day) }
-  scope :in_tomorrow, -> { where(start: Time.now.tomorrow.beginning_of_day..Time.now.tomorrow.end_of_day) }
-  scope :in_week, -> { where(start: Time.now.tomorrow.beginning_of_day..(Time.now + 1.week).end_of_day) }
-  scope :not_like_cancelled, -> { where.not('description like ?', '%キャンセル%') }
-  scope :not_cancelled, -> { where is_cancelled: false }
+  scope :in_future,             -> { where("start >= ?", Date.today ) }
+  scope :in_tomorrow,           -> { where(start: Time.now.tomorrow.beginning_of_day..Time.now.tomorrow.end_of_day) }
+  scope :in_week,               -> { where(start: Time.now.tomorrow.beginning_of_day..(Time.now + 1.week).end_of_day) }
+  scope :last_three_months,     -> { where(start: (Time.now - 3.months).end_of_day..Time.now.tomorrow.beginning_of_day) }
+  scope :not_like_cancelled,    -> { where.not('description like ?', '%キャンセル%') }
+  scope :not_cancelled,         -> { where(is_cancelled: false) }
   scope :not_personal_practice, -> { where.not('description like ?', '%信篤・開放%') }
-  scope :not_foo_fighters_practice, -> { where.not('description like ?', '%（浦）%') }
-  scope :order_by_start, -> { order("start") }
+  scope :not_foo_fighters_1,    -> { where.not('description like ?', '%（浦）%') }
+  scope :not_foo_fighters_2,    -> { where.not('description like ?', '%(浦)%') }
+  scope :not_foo_fighters,      -> { not_foo_fighters_1.not_foo_fighters_2 }
+  scope :order_by_start,        -> { order("start") }
 
   def date_ja(require_new_line = false, color_holiday = false)
     start_local = self.start.in_time_zone("Asia/Tokyo")

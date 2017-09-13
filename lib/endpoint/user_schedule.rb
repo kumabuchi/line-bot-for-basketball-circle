@@ -4,7 +4,7 @@ class UserSchedule
   end
 
   def summary
-    schedules = Schedule.in_future.not_cancelled.not_personal_practice.not_foo_fighters_practice.order_by_start
+    schedules = Schedule.in_future.not_cancelled.not_personal_practice.not_foo_fighters.order_by_start
     erb = ERB.new(File.read("#{ROOT_DIR}/lib/views/message/summary_user_schedule.erb"), nil, '-').result(binding)
     return unless erb.include?('-')
     send_msg_obj = Message.create_text_obj(erb)

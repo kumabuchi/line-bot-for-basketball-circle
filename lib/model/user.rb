@@ -1,5 +1,5 @@
 class User < ActiveRecord::Base
-  scope :need_remind, -> { where remind: true }
+  scope :need_remind,  -> { where remind: true }
   scope :need_request, -> { where request: true }
 
   def self.generate_random(length)
