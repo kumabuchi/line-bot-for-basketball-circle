@@ -22,6 +22,7 @@ url:
   grafana: <GRAFANA_URL>
   sportsone: http://www.sportsone.jp/xml/events_stock.xml
   crystarea: https://cry55.com/products/list.php?mode=search&area_id[]=12&area_id[]=36&class_id[]=
+  transit: https://transit.yahoo.co.jp/traininfo/area/4/
 error:
   db_inconsistency: DBがfollow状況と不整合です。
   user_not_found: ユーザが見つかりませんでした。

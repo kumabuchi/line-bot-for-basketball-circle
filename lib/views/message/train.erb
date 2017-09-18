@@ -1,0 +1,13 @@
+電車の遅延情報です。
+<% if traininfo.empty? -%>
+------------------
+該当する遅延情報または路線がありません。
+<% else -%>
+<% traininfo.each do |routename, info| -%>
+------------------
+【<%= info[:routename] %>】
+<%= info[:message] %> <%= info[:url] %>
+<% end -%>
+<% end -%>
+------------------
+Yahoo!路線：<%= Settings.url.transit %>

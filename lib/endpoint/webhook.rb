@@ -33,6 +33,14 @@ class Webhook
     LineApi.reply(param[:replyToken], send_msg_obj)
   end
 
+  def train(param)
+    routename = param[:message][:text].split[1..-1]
+    traininfo = Train.new.get_train_info(routename)
+    erb = File.read("#{ROOT_DIR}/lib/views/message/train.erb")
+    send_msg_obj = Message.create_text_obj(ERB.new(erb, nil, '-').result(binding))
+    LineApi.reply(param[:replyToken], send_msg_obj)
+  end
+
   def team(param)
     members = param[:message][:text].split[1..-1]
     if members.nil? || members.length < 1
