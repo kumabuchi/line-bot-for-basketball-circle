@@ -269,6 +269,7 @@ class Webhook
   end
 
   def help(param)
+    commitid = `cd #{ROOT_DIR}; git rev-parse HEAD`
     erb = File.read("#{ROOT_DIR}/lib/views/message/help.erb")
     send_msg_obj = Message.create_text_obj(ERB.new(erb, nil, '-').result(binding))
     LineApi.reply(param[:replyToken], send_msg_obj)
