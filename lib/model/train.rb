@@ -17,17 +17,21 @@ class Train
 
   def get_trouble_only
     @traininfo = get_all if @traininfo.nil?
-    @traininfo.find_all { |route, info| !info[:message].include?("平常運転") }
+    @traininfo.select { |route, info| !info[:message].include?("平常運転") }
   end
 
   def get_by_routename(routename)
     @traininfo = get_all if @traininfo.nil?
-    @traininfo.find_all { |route, info| info[:routename].include?(routename) }
+    @traininfo.select { |route, info| info[:routename].include?(routename) }
   end
 
-  def get_train_info(routename)
-    return get_trouble_only if routename.nil? || routename.length < 1
-    #return get_all if routename[0] == '全路線' # bug: 全路線は多すぎて400 Bad Requestになる
-    get_by_routename(routename[0])
+  def get_train_info(routenames)
+    return get_trouble_only if routenames.nil? || routenames.length < 1
+    #return get_all if routenames.include?('全路線') # bug: 全路線は多すぎて400 Bad Requestになる
+    train_info = {}
+    routenames.each do |routename|
+      train_info.merge!(get_by_routename(routename))
+    end
+    train_info
   end
 end

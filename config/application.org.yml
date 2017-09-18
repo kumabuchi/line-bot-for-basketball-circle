@@ -3,8 +3,8 @@ group_id: <GROUP_ID>
 admin_users:
   - <ADMIN_ID>
 db:
-  name: basketball
   adapter: sqlite3
+  path: /config/db/basketball.db
 reservation:
   id: <RESERVATION_SYSTEM_ID>
   password: <RESERVATION_SYSTEM_PASSWORD>
