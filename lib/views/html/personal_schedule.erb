@@ -30,6 +30,7 @@
       </div>
 
       <form id="submit-form" method="POST" action="./">
+        <input type="hidden" name="username" value="<%= @user.name %>">
         <button type="submit" id="submit-button"></button>
       </form>
     </div>
