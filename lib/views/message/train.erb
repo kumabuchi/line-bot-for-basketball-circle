@@ -3,13 +3,11 @@
 ------------------
 該当する遅延情報または路線がありません。
 <% else -%>
-<% count = 0 -%>
-<% traininfo.each do |routename, info| -%>
+<% traininfo.each_with_index do |(routename, info), index| -%>
+<% break if index >= 15 -%>
 ------------------
 【<%= info[:routename] %>】
 <%= info[:message] %> <%= info[:url] %>
-<% count = count + 1 -%>
-<% break if count >= 15 -%>
 <% end -%>
 <% end -%>
 ------------------
