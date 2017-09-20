@@ -141,6 +141,11 @@ class UserSchedule
       participation = Participation.create(user_id: p.user_id, schedule_id: dest.id, propriety: p.propriety)
       participation.save! 
     end
+    erb = File.read("#{ROOT_DIR}/lib/views/message/merge_done.erb")
+    send_msg_obj = Message.create_text_obj(ERB.new(erb, nil, '-').result(binding))
+    Settings.admin_users.each do |admin_user|
+      LineApi.push(admin_user, send_msg_obj)
+    end
   end
 
   private

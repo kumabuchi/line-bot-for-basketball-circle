@@ -4,8 +4,10 @@ class Controller < Sinatra::Base
 
   before do
     @logger = Logger.new('log/sinatra.log')
+    @logger.info(params) unless params.empty?
   end
 
+  # Admin API authentication
   ['/schedule/merge/:random_hash'].each do |path|
     before path do
       user = User.find_by(random: params[:random_hash])
@@ -14,9 +16,11 @@ class Controller < Sinatra::Base
         html = erb :'html/error_500', layout: false
         halt 403, html
       end
+      @logger.info(message: "Admin API is called by #{user.name}") if request.request_method == 'POST'
     end
   end
 
+  # Check token in cron requests
   ['/schedule/remind/:token', '/schedule/request/:token', '/schedule/summary/:token', '/schedule/sync/:token'].each do |path|
     before path do
       token = File.read("#{ROOT_DIR}/tmp/token")
@@ -55,8 +59,8 @@ class Controller < Sinatra::Base
 
   post '/api/query' do
     content_type :json
-    params = JSON.parse(request.body.read, symbolize_names: true)
-    Api.new.query(params).to_json
+    queries = JSON.parse(request.body.read, symbolize_names: true)
+    Api.new.query(queries).to_json
   end
 
   get '/schedule/remind/:token' do
@@ -85,17 +89,13 @@ class Controller < Sinatra::Base
   end
 
   get '/schedule/merge/:random_hash' do
-    @srcs, @dests, @src, @dest = UserSchedule.new.get_merge_src_and_dest(@params)
-    if @src && @dest
-      erb :'html/merge_check'
-    else
-      erb :'html/merge'
-    end
+    @srcs, @dests, @src, @dest = UserSchedule.new.get_merge_src_and_dest(params)
+    return erb :'html/merge_check' if @src && @dest
+    erb :'html/merge'
   end
 
   post '/schedule/merge/:random_hash' do
-    print @params
-    UserSchedule.new.merge(@params)
+    UserSchedule.new.merge(params)
     redirect to('/schedule')
   end
 
@@ -110,18 +110,24 @@ class Controller < Sinatra::Base
   end
 
   post '/schedule/:random_hash' do |random_hash|
-    @logger.info(@params)
-    UserSchedule.new.update(random_hash, @params)
+    UserSchedule.new.update(random_hash, params)
     redirect to('/schedule')
   end
 
   post '/webhook' do
-    params = JSON.parse(request.body.read, symbolize_names: true)
-    @logger.info(params)
+    webhook_params = JSON.parse(request.body.read, symbolize_names: true)
+    @logger.info(webhook_params)
    
-    params[:events].each do |param|
-      break if !param[:source][:groupId].nil? && param[:source][:groupId] != Settings.group_id
-      source_id = param[:source][:groupId].nil? ? param[:source][:userId] : param[:source][:groupId]
+    webhook_params[:events].each do |param|
+      next if !param[:source][:groupId].nil? && param[:source][:groupId] != Settings.group_id
+
+      user_id   = param[:source][:userId]
+      group_id  = param[:source][:groupId]
+      source_id = group_id.nil? ? user_id : group_id
+
+      user      = User.find_by(line_user_id: user_id)
+      param[:username] = user.name unless user.nil?
+      @logger.info(param)
 
       if param[:type] == 'follow'
         Webhook.new.follow(param)
@@ -217,6 +223,7 @@ class Controller < Sinatra::Base
 
   private
 
+  # Webhook Admin function Authentication
   def is_admin(user_id)
     Settings.admin_users.include?(user_id)
   end
