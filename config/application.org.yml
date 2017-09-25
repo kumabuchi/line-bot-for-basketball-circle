@@ -19,6 +19,7 @@ docomo:
     context: <DIALOGUE_CONTEXT>
 url:
   band: <BAND_CALENDAR_URL>
+  calendar: <GOOGLE_CALENDAR_URL>
   dropbox: <DROPBOX_MOVIE_URL>
   grafana: <GRAFANA_URL>
   sportsone: http://www.sportsone.jp/xml/events_stock.xml

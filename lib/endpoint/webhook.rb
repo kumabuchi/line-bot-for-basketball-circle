@@ -195,6 +195,12 @@ class Webhook
     LineApi.reply(param[:replyToken], send_msg_obj)
   end
 
+  def calendar(param)
+    erb = File.read("#{ROOT_DIR}/lib/views/message/calendar.erb")
+    send_msg_obj = Message.create_text_obj(ERB.new(erb, nil, '-').result(binding))
+    LineApi.reply(param[:replyToken], send_msg_obj)
+  end
+
   def monitoring(param)
     erb = File.read("#{ROOT_DIR}/lib/views/message/monitoring.erb")
     send_msg_obj = Message.create_text_obj(ERB.new(erb, nil, '-').result(binding))
