@@ -18,6 +18,7 @@ docomo:
     api_key: <DOCOMO_DIALOGUE_API_KEY>
     context: <DIALOGUE_CONTEXT>
 url:
+  band: <BAND_CALENDAR_URL>
   dropbox: <DROPBOX_MOVIE_URL>
   grafana: <GRAFANA_URL>
   sportsone: http://www.sportsone.jp/xml/events_stock.xml

@@ -42,6 +42,10 @@ class Schedule < ActiveRecord::Base
     date_str
   end
 
+  def is_foo_fighters?
+    self.description.nil? || self.description.include?('(浦)') || self.description.include?('（浦）')
+  end
+
   def count_ok
     Participation.where(schedule_id: self.id).where(propriety: 1).count
   end

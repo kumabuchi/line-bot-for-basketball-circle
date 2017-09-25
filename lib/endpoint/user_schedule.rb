@@ -20,8 +20,12 @@ class UserSchedule
 
   def sync
     events = GoogleCalendar.new.list
-    Schedule.update_cancel_all
+    band_events = Band.new.list
     new_schedules = []
+    # 時間のかかるAPIコールのあとでDBの更新処理をまとめて行う。
+    # GoogleCalendar/Bandのどちらかでデータ取得が失敗した場合、raiseされDBは更新されない
+    Schedule.update_cancel_all
+    # GoogleCalenderの情報を反映
     events.each do |event|
       start_date = event.start.date || event.start.date_time
       end_date = event.end.date || event.end.date_time
@@ -36,6 +40,16 @@ class UserSchedule
       schedule.is_cancelled = event.summary.include?('キャンセル')
       schedule.save!
     end
+    # Bandの情報を反映
+    band_events.each do |event|
+      schedule = Schedule.find_or_initialize_by(start: event[:start], end: event[:end])
+      next unless schedule.is_foo_fighters?
+      new_schedules.push(schedule) if schedule.new_record?
+      schedule.description = event[:summary]
+      schedule.is_cancelled = event[:is_cancelled]
+      schedule.save!
+    end
+    # 新規に追加された予定をグループ宛に通知
     new_schedules.each do |schedule|
       erb = File.read("#{ROOT_DIR}/lib/views/message/sync.erb")
       send_msg_obj = Message.create_text_obj(ERB.new(erb, nil, '-').result(binding))
